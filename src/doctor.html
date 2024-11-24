@@ -165,7 +165,7 @@
                     </div>
                 </form>
                 <div class="content-record">
-                    <p id="addrPatientWaitSignRecord" hidden></p>
+                    <!-- <p id="addrPatientWaitSignRecord" hidden></p> -->
                 </div>
                 <div class="text-center">
                     <button onclick = "ClearDropDownbox()" class="btn btn-info">Clear</button>
@@ -390,7 +390,7 @@
                 if(!error) {
 
                     healthcareList = result;
-                    test = result
+                    test = result;
                     for(var i = 0; i < healthcareList.length; i++) {
                         contractInstance.get_patient.call(healthcareList[i], {gas: 1000000},function(error, result){
 
@@ -415,9 +415,10 @@
             contractInstance.get_queue_doctor_sign_first.call(key, { gas: 1000000 }, function(error, result){
                 if(!error) {
                     healthcareList = result;
+                    test = result
                     for(var i = 0; i < healthcareList.length; i++) {
+                        var x1 = test[i];
                         contractInstance.get_patient.call(healthcareList[i], {gas: 1000000},function(error, result){
-
                             var list = document.getElementById("permithealthcareList");
 
                             if(!error) {
@@ -426,7 +427,8 @@
                                 option.text = a+" :"+b ;
                                 list.add(option);
                                 console.log(result);
-                                document.getElementById("addrPatientWaitSignRecord").innerText = healthcareList[0];
+                                // document.getElementById("addrPatientWaitSignRecord").innerText = healthcareList[0];
+                                document.getElementsByClassName("content-request").item(0).innerHTML = `<p id="addrPatientWaitSignRecord${i}" hidden>${x1}</p>`
                             }
                             else
                                 console.error(error);
@@ -671,14 +673,16 @@
             index = list.selectedIndex;
 
             var healthcareList = 0;
-
-            contractInstance.get_patient_list({gas: 1000000}, function(error, result){
+            var element = document.getElementById(`addrPatientWaitSignRecord${index}`);
+            console.log("23423423:",`addrPatientWaitSignRecord${index}`)
+            var healthcareToBeAdded = element.textContent;
+            // contractInstance.get_patient_list({gas: 1000000}, function(error, result){
                 
-                if(!error) {
-                    // console.log(index);
+            //     if(!error) {
+            //         // console.log(index);
 
-                    healthcareList = result;
-                    healthcareToBeAdded = healthcareList[index-1];
+            //         healthcareList = result;
+            //         healthcareToBeAdded = healthcareList[index-1];
                     contractInstance.get_hash(healthcareToBeAdded, { gas: 1000000 }, function (error, result) {
                     if (!error) {
 
@@ -762,9 +766,9 @@
                                                 
                     // })
 
-                } else
-                    console.log(error);
-            })
+            //     } else
+            //         console.log(error);
+            // })
         })
         
         // Cần sử ký sự kiên tại đây
