@@ -15,16 +15,25 @@ contract Medishield {
         string name;
         uint number;
         uint designation;
-        address[] patientAccessList;
+        address[] patientAccessList; // view
+        address[] queuDoctorSign; // sign
+        address[] queuePatient; // patients
+        address[] queuePatientGetMedicine; // hospital
+        address[] doctorAccessList; // hospital
+        address[] accessJob; // doctor
+        string medincines; // data medicine
     }
 
     uint creditPool;
     address[] public patientList;
     address[] public healthcareList;
-
+    address[] public hospitalList;
 
     mapping (address => patient) patientInfo;
     mapping (address => healthcare) healthcareInfo;
+    //new
+    mapping (address => healthcare) hospitalInfo;
+    //
     mapping (address => address) Empty;
     mapping (address => string) patientRecords;
 
@@ -45,6 +54,7 @@ contract Medishield {
             d.name = _name;
             d.number = _number;
             d.designation = _designation;
+            d.medincines = _hash;
             healthcareInfo[msg.sender] = d;
             healthcareList.push(addr)-1;
             return _name;
@@ -54,8 +64,9 @@ contract Medishield {
             d.name = _name;
             d.number = _number;
             d.designation = _designation;
-            healthcareInfo[msg.sender] = d;
-            healthcareList.push(addr)-1;
+            d.medincines = _hash;
+            hospitalInfo[msg.sender] = d;
+            hospitalList.push(addr)-1;
             return _name;
        }
        else{
@@ -69,6 +80,9 @@ contract Medishield {
     }
 
     function get_healthcare(address addr) view public returns (string memory , uint, uint256){
+        return (healthcareInfo[addr].name, healthcareInfo[addr].number, healthcareInfo[addr].designation);
+    }
+    function get_hospital(address addr) view public returns (string memory , uint, uint256){
         return (healthcareInfo[addr].name, healthcareInfo[addr].number, healthcareInfo[addr].designation);
     }
     function get_patient_healthcare_name(address paddr, address daddr) view public returns (string memory , string memory ){
@@ -86,7 +100,26 @@ contract Medishield {
         creditPool += 2;
         patientInfo[addr].healthcareRequestList.push(msg.sender)-1;
     }
-    //new
+    // new
+    function create_an_appointment(address addr) payable public {
+        require(msg.value == 2 ether);
+        creditPool += 2;
+        healthcareInfo[addr].queuePatient.push(msg.sender)-1;
+    }
+    function access_request_patient(address addr) payable public {
+        require(msg.value == 2 ether);
+        creditPool += 2;
+        healthcareInfo[msg.sender].queuDoctorSign.push(addr)-1;
+        creditPool -= 2;
+        remove_element_in_array(healthcareInfo[msg.sender].queuePatient, addr);
+    }
+    function doctor_apply(address addr) payable public {
+        require(msg.value == 2 ether);
+        creditPool += 2;
+        hospitalInfo[addr].doctorAccessList.push(msg.sender)-1;
+        healthcareInfo[msg.sender].accessJob.push(addr)-1;
+    }
+    //
     function permit_access_and_remove_doctor_permit_access(address addr) payable public {
         require(msg.value == 2 ether);
         creditPool += 2;
@@ -95,11 +128,17 @@ contract Medishield {
         creditPool -= 2;
         remove_element_in_array(patientInfo[msg.sender].healthcareRequestList, addr);
     }
-    //
     function cancel_access(address addr) payable public {
         require(msg.value == 2 ether);
         creditPool -= 2;
         remove_element_in_array(patientInfo[msg.sender].healthcareRequestList, addr);
+    }
+    function permit_access_and_submitfile(address addr, address paddr, uint _diagnosis, string memory  _hash) payable public {
+        require(msg.value == 2 ether);
+        creditPool += 2;
+        healthcareInfo[addr].patientAccessList.push(msg.sender)-1;
+        patientInfo[msg.sender].healthcareAccessList.push(addr)-1;
+        submitfile(paddr,_diagnosis,_hash);
     }
     // show request 
     //must be called by healthcare.
@@ -126,6 +165,32 @@ contract Medishield {
             if(patientInfo[paddr].diagnosis[j] == _diagnosis)DiagnosisFound = true;
         }
     }
+
+    //new
+    // function submitfileHospital(address paddr, uint _diagnosis, string memory  _hash) public {
+    //     bool patientFound = false;
+    //     for(uint i = 0;i<healthcareInfo[msg.sender].patientAccessList.length;i++){
+    //         if(healthcareInfo[msg.sender].patientAccessList[i]==paddr){
+    //             msg.sender.transfer(2 ether);
+    //             creditPool -= 2;
+    //             patientFound = true;
+                
+    //         }
+            
+    //     }
+    //     if(patientFound==true){
+    //         set_medincine(paddr, _hash);
+    //         remove_patient(paddr, msg.sender); // fix
+    //     }else {
+    //         revert();
+    //     }
+
+    //     bool DiagnosisFound = false;
+    //     for(uint j = 0; j < patientInfo[paddr].diagnosis.length;j++){
+    //         if(patientInfo[paddr].diagnosis[j] == _diagnosis)DiagnosisFound = true;
+    //     }
+    // }
+    //
 
     function remove_element_in_array(address[] storage Array, address addr) internal returns(uint)
     {
@@ -170,14 +235,38 @@ contract Medishield {
     {
         return healthcareInfo[addr].patientAccessList;
     }
-
-    
+    // new
+    function get_appointment_first(address addr) public view returns (address[] memory ){
+        address[] storage healthcareaddr = healthcareInfo[addr].queuePatient;
+        return healthcareaddr;
+    }
+    function get_queue_doctor_sign_first(address addr) public view returns (address[] memory ){
+        address[] storage healthcareaddr = healthcareInfo[addr].queuDoctorSign;
+        return healthcareaddr;
+    }
+    function get_employeees_hospital(address addr) public view returns (address[] memory) {
+        address[] storage doctoraddr = hospitalInfo[addr].doctorAccessList;
+        return doctoraddr;
+    }
+    function get_job_doctor(address addr) public view returns (address[] memory) {
+        address[] storage doctoraddr = healthcareInfo[addr].accessJob;
+        return doctoraddr;
+    }
+    function resign_job_from_doctor(address addr) public {
+        remove_element_in_array(hospitalInfo[addr].doctorAccessList, msg.sender);
+        remove_element_in_array(healthcareInfo[msg.sender].accessJob, addr);
+    }
+    function quit_job_from_hospital(address addr) public {
+        remove_element_in_array(hospitalInfo[msg.sender].doctorAccessList, addr);
+        remove_element_in_array(healthcareInfo[addr].accessJob, msg.sender);
+    }
+    //
     function revoke_access(address daddr) public payable{
         remove_patient(msg.sender,daddr);
         msg.sender.transfer(2 ether);
         creditPool -= 2;
     }
-
+    
     function get_patient_list() public view returns(address[] memory ){
         return patientList;
     }
@@ -189,10 +278,22 @@ contract Medishield {
     function get_hash(address paddr) public view returns(string memory ){
         return patientInfo[paddr].record;
     }
-
+ 
     function set_hash(address paddr, string memory _hash) internal {
         patientInfo[paddr].record = _hash;
     }
+
+    //new
+    function get_hospital_list() public view returns (address[] memory) {
+        return hospitalList;
+    }
+    function get_medincines(address addr) public view returns(string memory) {
+        return hospitalInfo[addr].medincines;
+    }
+    function set_medincine(address paddr, string memory _hash) public {
+        hospitalInfo[paddr].medincines = _hash;
+    }
+    //
 
 }
 
