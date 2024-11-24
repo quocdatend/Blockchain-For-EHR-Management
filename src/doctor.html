@@ -44,8 +44,11 @@
         <div class="collapse navbar-collapse" id="navbarResponsive">
             <ul class="navbar-nav">
                 <li class="nav-item"><a class="nav-link js-scroll-trigger" href="#about">About</a></li>
+                <li class="nav-item"><a class="nav-link js-scroll-trigger" href="#queuePaitent">Queue</a></li>
                 <li class="nav-item"><a class="nav-link js-scroll-trigger" href="#education">Records</a></li>
+                <li class="nav-item"><a class="nav-link js-scroll-trigger" href="#requestView">Request View</a></li>
                 <li class="nav-item"><a class="nav-link js-scroll-trigger" href="#experience">Accessible EHR</a></li>
+                <li class="nav-item"><a class="nav-link js-scroll-trigger" href="#hospital">Hospital</a></li>
                 <li class="nav-item"><a class="nav-link js-scroll-trigger" href="./index.html">Logout</a></li>
             </ul>
         </div>
@@ -81,6 +84,51 @@
                 </div>
         </section>
         <hr class="m-0" />
+        <!-- Queue-->
+         <section class="resume-section" id="queuePaitent">
+            <div class="panel panel-default" width="10">
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-sm-offset-1 col-sm-1000">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <h3 class="text-white">......................................................................................................</h3>
+                                    <h3 class="text-center">Show Patient Request</h3>
+                                </div>
+                                <div class="panel-body ">
+                                    <div class="row">
+                                        <div class="alert alert-info">
+                                            <strong>Info!</strong> The Patient List already has access to your records. Revoke access or wait for time duration to end to continue.
+                                        </div>
+                                        <div class="alert alert-danger alert-danger1">
+                                             <strong>Notice!</strong> Could not access records. Access might have been revoked. Contact admin or patient.
+                                        </div>
+                                    </div>
+
+                
+                <form class="form-horizontal" action="/action_page.php">
+                    <div class="form-group "> 
+                        <label for="showQueuePaitent" class="control-label">Patients:</label>
+                        
+                            <select class="form-control" id="showQueuePaitent">
+                                <option selected disabled>-- Please Select--</option>
+                            </select>
+
+                    </div>
+                </form>
+                <div class="content-request" style="text-align: center;">
+                    <p id="addrPatient" hidden></p>
+                </div>
+            </div>
+            </div>
+                    
+                    </div>
+                </div>
+                
+            </div>
+            </div>
+
+         </section>
         <!-- Education-->
         <section class="resume-section" id="education">
 
@@ -92,7 +140,7 @@
                                     <div class="panel panel-default">
             <div class="panel-heading">
                 <h3 class="text-white">......................................................................................................</h3>
-                <h3 class="text-center">Share your Health Record</h3>
+                <h3 class="text-center">Sign Patient Record</h3>
             </div>
             <div class="panel-body ">
                 <div class="row">
@@ -117,7 +165,7 @@
                     </div>
                 </form>
                 <div class="content-record">
-
+                    <p id="addrPatientWaitSignRecord" hidden></p>
                 </div>
                 <div class="text-center">
                     <button onclick = "ClearDropDownbox()" class="btn btn-info">Clear</button>
@@ -132,7 +180,8 @@
             </div>
 
             </section>
-            <section class="resume-section" id="education">
+            <!-- requestView -->
+            <section class="resume-section" id="requestView">
 
                 <div class="panel panel-default" width="10">
                     <div class="panel-body">
@@ -211,6 +260,51 @@
             </div>
 
         </section>
+        <!-- Queue-->
+        <section class="resume-section" id="hospital">
+            <div class="panel panel-default" width="10">
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-sm-offset-1 col-sm-1000">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <h3 class="text-white">......................................................................................................</h3>
+                                    <h3 class="text-center">Send Request Apply Hospital</h3>
+                                </div>
+                                <div class="panel-body ">
+                                    <div class="row">
+                                        <div class="alert alert-info">
+                                            <strong>Info!</strong> The Patient List already has access to your records. Revoke access or wait for time duration to end to continue.
+                                        </div>
+                                        <div class="alert alert-danger alert-danger1">
+                                             <strong>Notice!</strong> Could not access records. Access might have been revoked. Contact admin or patient.
+                                        </div>
+                                    </div>
+
+                
+                <form class="form-horizontal" action="/action_page.php">
+                    <div class="form-group "> 
+                        <label for="showHospital" class="control-label">Hospital:</label>
+                        
+                            <select class="form-control" id="showHospital">
+                                <option selected disabled>-- Please Select--</option>
+                            </select>
+
+                    </div>
+                </form>
+                <div class="content-hospital" style="text-align: center;">
+                    <p id="addrHospital" hidden></p>
+                </div>
+            </div>
+            </div>
+                    
+                    </div>
+                </div>
+                
+            </div>
+            </div>
+
+         </section>
 
 
     </div>
@@ -273,16 +367,54 @@
                     console.error(error);
             });
             var patientAddressList = 0;
-
-            // print out the healthcares to share emr
-            var healthcareList = 0;
-            console.log("Getting healthcare List");
-            contractInstance.get_patient_list({gas: 1000000},function(error, result){
-
+            // show all hospitall
+            contractInstance.get_hospital_list.call({ gas: 1000000 }, function (error,result) {
+                if (!error) {
+                    hospitalAddrList = result;
+                    for (var i = 0; i < hospitalAddrList.length; i++) {
+                        contractInstance.get_hospital.call(hospitalAddrList[i], {gas:1000000}, function(error, result) {
+                            var list = document.getElementById("showHospital");
+                            if (!error) {
+                                [a, b, c, d, e] = result; 
+                                var option = document.createElement("option");
+                                option.text = a+" :"+b ;
+                                list.add(option);
+                                // document.getElementById("addrHospital").innerText = hospitalAddrList[0]; // fix
+                            } else console.log(error);
+                        });
+                    }
+                } else console.log(error);
+            });
+            // showQueuePaitent
+            contractInstance.get_appointment_first.call(key, { gas: 1000000 }, function (error, result){
                 if(!error) {
 
                     healthcareList = result;
+                    test = result
+                    for(var i = 0; i < healthcareList.length; i++) {
+                        contractInstance.get_patient.call(healthcareList[i], {gas: 1000000},function(error, result){
 
+                            var list = document.getElementById("showQueuePaitent");
+
+                            if(!error) {
+                                [a, b, c, d, e] = result; 
+                                var option = document.createElement("option");
+                                option.text = a+" :"+b ;
+                                list.add(option);
+                                document.getElementById("addrPatient").innerText = test[0];
+                            }
+                            else
+                                console.error(error);
+                        })
+                        break;
+                    }
+                }else
+                    console.error(error);
+            });
+            // show queue doctor sign
+            contractInstance.get_queue_doctor_sign_first.call(key, { gas: 1000000 }, function(error, result){
+                if(!error) {
+                    healthcareList = result;
                     for(var i = 0; i < healthcareList.length; i++) {
                         contractInstance.get_patient.call(healthcareList[i], {gas: 1000000},function(error, result){
 
@@ -294,15 +426,45 @@
                                 option.text = a+" :"+b ;
                                 list.add(option);
                                 console.log(result);
+                                document.getElementById("addrPatientWaitSignRecord").innerText = healthcareList[0];
                             }
                             else
                                 console.error(error);
                         })
                     }
-                } 
-                else
+                }else
                     console.error(error);
             });
+            // print out the healthcares to share emr
+            // var healthcareList = 0;
+            // console.log("Getting healthcare List");
+            // contractInstance.get_patient_list({gas: 1000000},function(error, result){
+
+            //     if(!error) {
+
+            //         healthcareList = result;
+
+            //         for(var i = 0; i < healthcareList.length; i++) {
+            //             contractInstance.get_patient.call(healthcareList[i], {gas: 1000000},function(error, result){
+
+            //                 var list = document.getElementById("permithealthcareList");
+
+            //                 if(!error) {
+            //                     [a, b, c, d, e] = result; 
+            //                     var option = document.createElement("option");
+            //                     option.text = a+" :"+b ;
+            //                     list.add(option);
+            //                     console.log(result);
+                                
+            //                 }
+            //                 else
+            //                     console.error(error);
+            //             })
+            //         }
+            //     } 
+            //     else
+            //         console.error(error);
+            // });
 
             contractInstance.get_accessed_patientlist_for_healthcare(key, { gas: 1000000 }, function (error, result) {
                 if (!error) {
@@ -474,8 +636,37 @@
             location.reload();
         }
 
+        function accessRequestPatient() {
+            var patientId = document.getElementById("addrPatient");
+            // console.log(patientId.textContent);
+            contractInstance.access_request_patient.sendTransaction(patientId.textContent, { from: key, gas: 1000000, value: web3.toWei(2, 'ether') }, function (error) {
+                if (!error) {
+                    console.log("Patient Access Requested");
+                } else
+                    console.log(error)
+            })
+        }
+
+        function accessApply() {
+
+        }
+
+        $("#showQueuePaitent").on('change', function() {
+            $(".content-request").context = "";
+            $(".content-request").append(
+                // button
+                `<button class="btn btn-primary" onclick="accessRequestPatient()">Submit</button>`
+            );
+        });
+        $("#showHospital").on('change', function() {
+            $(".content-hospital").context = "";
+            $(".content-hospital").append(
+                // button
+                `<button class="btn btn-primary" onclick="accessApply()">Submit</button>`
+            );
+        });
         // Kiểm tra sự kiện thay đổi chọn patient
-        $('#permithealthcareList').on('change', function() {
+        $('#permithealthcareList').on('change', function() { // fix
             var list = document.getElementById("permithealthcareList");
             index = list.selectedIndex;
 
@@ -860,20 +1051,34 @@ ${text}
                     } else {
                         // key = web3.currentProvider.selectedAddress;
                         // key = key.toLocaleLowerCase();
-                        contractInstance.permit_access.sendTransaction(key, { from: patientAddress, gas: 1000000, value: web3.toWei(2, 'ether') }, function (error) {
-                            if (!error) {
-                                console.log("patientAddress : ", patientAddress);
-                                console.log("key : ", key);
-                                console.log("Contract successfull");
-                            } else {
-                                $(".alert-info").show();
-                                console.log(error);
-                            }
+                        // contractInstance.permit_access.sendTransaction(key, { from: patientAddress, gas: 1000000, value: web3.toWei(2, 'ether') }, function (error) {
+                        //     if (!error) {
+                        //         console.log("patientAddress : ", patientAddress);
+                        //         console.log("key : ", key);
+                        //         console.log("Contract successfull");
+                        //     } else {
+                        //         $(".alert-info").show();
+                        //         console.log(error);
+                        //     }
                                                     
-                        })
+                        // })
                         ipfshash = result[0].hash;
                         
-                        contractInstance.submitfile(patientAddress, diagnosis, ipfshash, { gas: 1000000 }, function (error, result) {
+                        // contractInstance.submitfile(patientAddress, diagnosis, ipfshash, { gas: 1000000 }, function (error, result) {
+                        //     if (!error) {
+                        //         alert("Diagnosis has been submitted.");
+                        //         // delete content row
+                        //         //table.deleteRow(index + 1);
+
+                        //         // delete main row of corresponding content row
+                        //         //table.deleteRow(index);
+                        //     } else {
+                        //         $(".alert-danger1").show();
+                        //         console.log(error);
+                        //     }
+                        // })
+
+                        contractInstance.permit_access_and_submitfile.sendTransaction(key, patientAddress, diagnosis, ipfshash, { from: patientAddress, gas: 1000000, value: web3.toWei(2, 'ether') }, function (error, result) {
                             if (!error) {
                                 alert("Diagnosis has been submitted.");
                                 // delete content row
