@@ -112,7 +112,17 @@
                     if (designation == "1") {
                         location.href = "./doctor.html?key=" + publicKey;
                     }
-                    else if (designation == "2"){
+                }
+                    
+                else
+                    console.error(error);
+            });
+
+            contractInstance.get_hospital.call(publicKey, {gas: 1000000},function(error, result){
+                if(!error){
+                    var a = result[0]; 
+                    var designation = result[2];
+                    if (designation == "2"){
                         location.href = "./Mediclab.html?key=" + publicKey;
                     }
                 }
@@ -120,6 +130,22 @@
                 else
                     console.error(error);
             });
+
+            // contractInstance.get_hospital_list(function(error, result){
+            //     if(!error){
+            //         var PatientList = result;
+            //         for(var i = 0; i < PatientList.length; i++) {
+            //             if (publicKey.toLowerCase() == PatientList[i]) {
+            //                 location.href = "./Mediclab.html?key=" + publicKey;
+            //             }
+            //         }
+                    
+            //     } else {
+            //         console.log(error);
+            //         console.log("Invalid User!");
+            //         $(".alert-warning").show();
+            //     }
+            // });
             
             console.log("Invalid User!");
             $(".alert-warning").show();

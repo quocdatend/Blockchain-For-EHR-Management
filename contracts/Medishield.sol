@@ -83,7 +83,7 @@ contract Medishield {
         return (healthcareInfo[addr].name, healthcareInfo[addr].number, healthcareInfo[addr].designation);
     }
     function get_hospital(address addr) view public returns (string memory , uint, uint256){
-        return (healthcareInfo[addr].name, healthcareInfo[addr].number, healthcareInfo[addr].designation);
+        return (hospitalInfo[addr].name, hospitalInfo[addr].number, hospitalInfo[addr].designation);
     }
     function get_patient_healthcare_name(address paddr, address daddr) view public returns (string memory , string memory ){
         return (patientInfo[paddr].name,healthcareInfo[daddr].name);

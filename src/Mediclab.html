@@ -27,6 +27,7 @@
                 <ul class="navbar-nav">
                     <li class="nav-item"><a class="nav-link js-scroll-trigger" href="#about">About</a></li>
                     <li class="nav-item"><a class="nav-link js-scroll-trigger" href="#experience">Pending Request</a></li>
+                    <li class="nav-item"><a class="nav-link js-scroll-trigger" href="#employeees">Employeees</a></li>
                     <li class="nav-item"><a class="nav-link js-scroll-trigger" href="./index.html">Logout</a></li>
                 </ul>
             </div>
@@ -89,8 +90,84 @@
         </div>  
                 
             </section>
-            
-            
+            <!-- Queue-->
+        <!-- <section class="resume-section" id="employeees">
+            <div class="panel panel-default" width="10">
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-sm-offset-1 col-sm-1000">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <h3 class="text-white">......................................................................................................</h3>
+                                    <h3 class="text-center">Show all employee</h3>
+                                </div>
+                                <div class="panel-body ">
+                                    <div class="row">
+                                        <div class="alert alert-info">
+                                            <strong>Info!</strong> The Patient List already has access to your records. Revoke access or wait for time duration to end to continue.
+                                        </div>
+                                        <div class="alert alert-danger alert-danger1">
+                                             <strong>Notice!</strong> Could not access records. Access might have been revoked. Contact admin or patient.
+                                        </div>
+                                    </div>
+
+                
+                <form class="form-horizontal" action="/action_page.php">
+                    <div class="form-group "> 
+                        <label for="showEmployee" class="control-label">Hospital:</label>
+                        
+                            <select class="form-control" id="showEmployee">
+                                <option selected disabled>-- Please Select--</option>
+                            </select>
+
+                    </div>
+                </form>
+                <div class="content-employee" style="text-align: center;">
+                    <p id="addrHospital" hidden></p>
+                </div>
+            </div>
+            </div>
+                    
+                    </div>
+                </div>
+                
+            </div>
+            </div>
+
+         </section> -->
+        <!-- JOB-->
+        <section class="resume-section" id="employeees">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="text-white">
+                        ......................................................................................................
+                    </h3>
+                    <h3 class="text-center">Show all employee</h3>
+
+                </div>
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="alert alert-danger">
+                            <strong>Notice!</strong> Could not access records. Access might have been revoked. Contact
+                            admin or patient.
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-offset-1 col-sm-10">
+                            <table id="viewEmployee" class="table table-hover">
+                                <tr>
+                                    <th>Employee</th>
+                                    <th class="publicKeyEmployee">Public Key</th>
+
+                                    <th>Action</th>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </section>
 
         </div>
      <script src="js/jquery.js"></script>
@@ -141,7 +218,7 @@
         var a = 0;
         var b = 0;
         var designation = 0;
-        contractInstance.get_healthcare.call(key, {gas: 1000000},function(error, result){
+        contractInstance.get_hospital.call(key, {gas: 1000000},function(error, result){
             if(!error){
                 a = result[0]; 
                 b = result[1];
@@ -149,6 +226,7 @@
                 labName = a;
                 $("#name").html(a);
                 $("#age").html(b.c[0]);
+                console.log(result);
             }
                 
             else
@@ -190,7 +268,71 @@
                 console.error(error);
         });
 
+        contractInstance.get_employeees_hospital.call(key, { gas: 1000000 }, function (error, result){
+            if(!error) {
+                EmployeeAddressList = result;
+
+                EmployeeAddressList.forEach(function (EmployeeAddress, index) {
+                    var addr = EmployeeAddress;
+                    contractInstance.get_healthcare.call(EmployeeAddress, { gas: 1000000 }, function (error, result) {
+                        var table = document.getElementById("viewEmployee");
+                        if (!error) {
+                            [a, b] = result;
+                            console.log(a);
+
+                            var row = table.insertRow(index + 1);
+                            var cell1 = row.insertCell(0);
+                            var cell2 = row.insertCell(1);
+                            var cell3 = row.insertCell(2);
+                            //var cell4 = row.insertCell(3);
+                            cell2.className = "publicKeyEmployee";
+                            cell1.innerHTML = a;
+                            cell2.innerHTML = EmployeeAddress;
+                            cell3.innerHTML = `<input class="btn btn-danger" onclick="quitJob(this)" id="${addr}" type="button" value="Fired"></input>`;
+                            //cell4.innerHTML = `<input class="btn-outline-primary" type="file"  id="upload" type="button" onclick="abc(upload) placeholder="ho"></input>`;
+                        }
+                        else
+                            console.error(error);
+                    })
+                })
+        //         healthcareList = result;
+        //         test = result;
+        //         for(var i = 0; i < healthcareList.length; i++) {
+        //             var setlinkId = "employeeaddr"+i;
+        //             var addr = healthcareList[i];
+        //             contractInstance.get_healthcare.call(healthcareList[i], {gas: 1000000},function(error, result){
+        //                 var list = document.getElementById("showEmployee");
+        //                 if(!error) {
+        //                     [a, b, c, d, e] = result; 
+        //                     var option = document.createElement("option");
+        //                     option.text = a+" :"+b ;
+        //                     list.add(option);
+        //                     $(".content-employee").append(
+        //                         // button
+        //                         `<p id="${setlinkId}" hidden>${addr}</p>`
+        //                     );
+        //                 }
+        //                 else
+        //                     console.error(error);
+        //             })
+        //             break;
+        //         }
+            }else
+                console.error(error);
+        });
+
     });
+
+    function quitJob(element) {
+        var table = document.getElementById("viewEmployee");
+        var index = element.parentNode.parentNode.rowIndex;
+        var patientAddress = table.rows[index].cells[1].innerHTML;
+        contractInstance.quit_job_from_hospital(patientAddress, {gas:1000000}, function(error) {
+            if(!error) {
+                console.log("Quit job successfully");
+            } else console.log(error);
+        });
+    }
         
     function showRecords(element){
 
