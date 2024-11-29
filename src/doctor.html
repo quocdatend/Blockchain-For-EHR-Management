@@ -18,14 +18,97 @@
     <link href="css/styles1.css" rel="stylesheet" />
     <script>
         function toggleImage(imgId) {
-                var img = document.getElementById(imgId);
-                if (img.style.display === "none") {
-                    img.style.display = "block";
-                } else {
-                    img.style.display = "none";
-                }
+            var img = document.getElementById(imgId);
+            if (img.style.display === "none") {
+                img.style.display = "block";
+            } else {
+                img.style.display = "none";
             }
+        }
     </script>
+    <style>
+        .container {
+            background: #fff;
+            padding: 20px 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            width: 500px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .form-group {
+            flex: 1;
+            min-width: 45%;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            font-weight: bold;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        #addMedication {
+            background-color: #007BFF;
+            color: white;
+            margin-bottom: 20px;
+        }
+
+        button[type="submit"] {
+            background-color: #28a745;
+            color: white;
+        }
+
+        button:hover {
+            opacity: 0.9;
+        }
+
+        .medication-item {
+            border: 1px solid #ddd;
+            padding: 10px;
+            margin-bottom: 15px;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+
+        h3 {
+            margin-top: 0;
+            color: #444;
+        }
+    </style>
 </head>
 
 <body id="page-top">
@@ -34,8 +117,7 @@
         <a class="navbar-brand js-scroll-trigger" href="#page-top">
 
             <span class="d-none d-lg-block">
-                <img class="img-fluid img-profile rounded-circle mx-auto mb-2"
-                    src="assets/img/doctor.jpeg" alt="..." />
+                <img class="img-fluid img-profile rounded-circle mx-auto mb-2" src="assets/img/doctor.jpeg" alt="..." />
             </span>
         </a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive"
@@ -86,148 +168,153 @@
         </section>
         <hr class="m-0" />
         <!-- Queue-->
-         <section class="resume-section" id="queuePaitent">
+        <section class="resume-section" id="queuePaitent">
             <div class="panel panel-default" width="10">
                 <div class="panel-body">
                     <div class="row">
                         <div class="col-sm-offset-1 col-sm-1000">
                             <div class="panel panel-default">
                                 <div class="panel-heading">
-                                    <h3 class="text-white">......................................................................................................</h3>
+                                    <h3 class="text-white">
+                                        ......................................................................................................
+                                    </h3>
                                     <h3 class="text-center">Show Patient Request</h3>
                                 </div>
                                 <div class="panel-body ">
                                     <div class="row">
                                         <div class="alert alert-info">
-                                            <strong>Info!</strong> The Patient List already has access to your records. Revoke access or wait for time duration to end to continue.
+                                            <strong>Info!</strong> The Patient List already has access to your records.
+                                            Revoke access or wait for time duration to end to continue.
                                         </div>
                                         <div class="alert alert-danger alert-danger1">
-                                             <strong>Notice!</strong> Could not access records. Access might have been revoked. Contact admin or patient.
+                                            <strong>Notice!</strong> Could not access records. Access might have been
+                                            revoked. Contact admin or patient.
                                         </div>
                                     </div>
 
-                
-                <form class="form-horizontal" action="/action_page.php">
-                    <div class="form-group "> 
-                        <label for="showQueuePaitent" class="control-label">Patients:</label>
-                        
-                            <select class="form-control" id="showQueuePaitent">
-                                <option selected disabled>-- Please Select--</option>
-                            </select>
+                                    <form class="form-horizontal" action="/action_page.php">
+                                        <div class="form-group ">
+                                            <label for="showQueuePaitent" class="control-label">Patients:</label>
 
+                                            <select class="form-control" id="showQueuePaitent">
+                                                <option selected disabled>-- Please Select--</option>
+                                            </select>
+
+                                        </div>
+                                    </form>
+                                    <div class="content-request" style="text-align: center;">
+                                        <p id="addrPatient" hidden></p>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
                     </div>
-                </form>
-                <div class="content-request" style="text-align: center;">
-                    <p id="addrPatient" hidden></p>
+
                 </div>
             </div>
-            </div>
-                    
-                    </div>
-                </div>
-                
-            </div>
-            </div>
 
-         </section>
+        </section>
         <!-- Education-->
         <section class="resume-section" id="education">
 
-                            
-                        <div class="panel panel-default" width="10">
-                            <div class="panel-body">
-                <div class="row">
-                    <div class="col-sm-offset-1 col-sm-1000">
-                                    <div class="panel panel-default">
-            <div class="panel-heading">
-                <h3 class="text-white">......................................................................................................</h3>
-                <h3 class="text-center">Sign Patient Record</h3>
-            </div>
-            <div class="panel-body ">
-                <div class="row">
-                    <div class="alert alert-info">
-                        <strong>Info!</strong> The Patient List already has access to your records. Revoke access or wait for time duration to end to continue.
-                    </div>
-                    <div class="alert alert-danger alert-danger1">
-                        <strong>Notice!</strong> Could not access records. Access might have been revoked. Contact
-                        admin or patient.
-                    </div>
-                </div>
-
-                
-                <form class="form-horizontal" action="/action_page.php">
-                    <div class="form-group "> 
-                        <label for="permithealthcareList" class="control-label">Patients:</label>
-                        
-                            <select class="form-control" id="permithealthcareList">
-                                <option selected disabled>-- Please Select--</option>
-                            </select>
-
-                    </div>
-                </form>
-                <div class="content-record">
-                    <!-- <p id="addrPatientWaitSignRecord" hidden></p> -->
-                </div>
-                <div class="text-center">
-                    <button onclick = "ClearDropDownbox()" class="btn btn-info">Clear</button>
-                </div>
-            </div>
-            </div>
-                    
-                    </div>
-                </div>
-                
-            </div>
-            </div>
-
-            </section>
-            <!-- requestView -->
-            <section class="resume-section" id="requestView">
-
-                <div class="panel panel-default" width="10">
-                    <div class="panel-body">
-                        <div class="row">
-                            <div class="col-sm-offset-1 col-sm-1000">
-                                <div class="panel panel-default">
-                                    <div class="panel-heading">
-                                        <h3 class="text-white">
-                                            ......................................................................................................
-                                        </h3>
-                                        <h3 class="text-center">Send request to patient Health Record</h3>
+            <div class="panel panel-default" width="10">
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-sm-offset-1 col-sm-1000">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <h3 class="text-white">
+                                        ......................................................................................................
+                                    </h3>
+                                    <h3 class="text-center">Sign Patient Record</h3>
+                                </div>
+                                <div class="panel-body ">
+                                    <div class="row">
+                                        <div class="alert alert-info">
+                                            <strong>Info!</strong> The Patient List already has access to your records.
+                                            Revoke access or wait for time duration to end to continue.
+                                        </div>
+                                        <div class="alert alert-danger alert-danger1">
+                                            <strong>Notice!</strong> Could not access records. Access might have been
+                                            revoked. Contact
+                                            admin or patient.
+                                        </div>
                                     </div>
-                                    <div class="panel-body ">
-                                        <div class="row">
-                                            <div class="alert alert-info">
-                                                <strong>Info!</strong> The healthcare already has access to your records.
-                                                Revoke access or wait for time duration to end to continue.
-                                            </div>
+
+                                    <form class="form-horizontal" action="/action_page.php">
+                                        <div class="form-group ">
+                                            <label for="permithealthcareList" class="control-label">Patients:</label>
+
+                                            <select class="form-control" id="permithealthcareList">
+                                                <option selected disabled>-- Please Select--</option>
+                                            </select>
+
                                         </div>
-    
-                                        <form class="form-horizontal" action="/action_page.php">
-                                            <div class="form-group ">
-                                                <label for="patientList" class="control-label">Healthcare:</label>
-    
-                                                <select class="form-control" id="patientList">
-                                                    <option selected disabled>-- Please Select--</option>
-                                                </select>
-    
-                                            </div>
-                                        </form>
-                                        <div class="text-center">
-                                            <!-- sửa code để gửi requet  -->
-                                            <button onclick="giveAccessToPatient()"
-                                                class="btn btn-primary btn-lg">Submit</button>
-                                        </div>
+                                    </form>
+                                    <div class="content-record">
+                                        <!-- <p id="addrPatientWaitSignRecord" hidden></p> -->
+                                    </div>
+                                    <div class="text-center">
+                                        <button onclick="ClearDropDownbox()" class="btn btn-info">Clear</button>
                                     </div>
                                 </div>
-    
                             </div>
+
                         </div>
-    
                     </div>
+
                 </div>
-    
-            </section>
+            </div>
+
+        </section>
+        <!-- requestView -->
+        <section class="resume-section" id="requestView">
+
+            <div class="panel panel-default" width="10">
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-sm-offset-1 col-sm-1000">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <h3 class="text-white">
+                                        ......................................................................................................
+                                    </h3>
+                                    <h3 class="text-center">Send request to patient Health Record</h3>
+                                </div>
+                                <div class="panel-body ">
+                                    <div class="row">
+                                        <div class="alert alert-info">
+                                            <strong>Info!</strong> The healthcare already has access to your records.
+                                            Revoke access or wait for time duration to end to continue.
+                                        </div>
+                                    </div>
+
+                                    <form class="form-horizontal" action="/action_page.php">
+                                        <div class="form-group ">
+                                            <label for="patientList" class="control-label">Healthcare:</label>
+
+                                            <select class="form-control" id="patientList">
+                                                <option selected disabled>-- Please Select--</option>
+                                            </select>
+
+                                        </div>
+                                    </form>
+                                    <div class="text-center">
+                                        <!-- sửa code để gửi requet  -->
+                                        <button onclick="giveAccessToPatient()"
+                                            class="btn btn-primary btn-lg">Submit</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </section>
         <!-- Experience-->
         <section class="resume-section" id="experience">
             <div class="panel panel-default">
@@ -269,80 +356,81 @@
                         <div class="col-sm-offset-1 col-sm-1000">
                             <div class="panel panel-default">
                                 <div class="panel-heading">
-                                    <h3 class="text-white">......................................................................................................</h3>
+                                    <h3 class="text-white">
+                                        ......................................................................................................
+                                    </h3>
                                     <h3 class="text-center">Send Request Apply Hospital</h3>
                                 </div>
                                 <div class="panel-body ">
                                     <div class="row">
                                         <div class="alert alert-info">
-                                            <strong>Info!</strong> The Patient List already has access to your records. Revoke access or wait for time duration to end to continue.
+                                            <strong>Info!</strong> The Patient List already has access to your records.
+                                            Revoke access or wait for time duration to end to continue.
                                         </div>
                                         <div class="alert alert-danger alert-danger1">
-                                             <strong>Notice!</strong> Could not access records. Access might have been revoked. Contact admin or patient.
+                                            <strong>Notice!</strong> Could not access records. Access might have been
+                                            revoked. Contact admin or patient.
                                         </div>
                                     </div>
+                                    <form class="form-horizontal" action="/action_page.php">
+                                        <div class="form-group ">
+                                            <label for="showHospital" class="control-label">Hospital:</label>
 
-                
-                <form class="form-horizontal" action="/action_page.php">
-                    <div class="form-group "> 
-                        <label for="showHospital" class="control-label">Hospital:</label>
-                        
-                            <select class="form-control" id="showHospital">
-                                <option selected disabled>-- Please Select--</option>
-                            </select>
+                                            <select class="form-control" id="showHospital">
+                                                <option selected disabled>-- Please Select--</option>
+                                            </select>
 
-                    </div>
-                </form>
-                <div class="content-hospital1" style="text-align: center;">
-                    <!-- <p id="addrHospital" hidden></p> -->
-                </div>
-                <div class="content-hospital" style="text-align: center;">
-                    <!-- <p id="addrHospital" hidden></p> -->
-                </div>
-            </div>
-            </div>
-                    
-                    </div>
-                </div>
-                
-            </div>
-            </div>
-
-         </section>
-          <!-- JOB-->
-            <section class="resume-section" id="job">
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <h3 class="text-white">
-                            ......................................................................................................
-                        </h3>
-                        <h3 class="text-center">Show Hospital Working</h3>
-
-                    </div>
-                    <div class="panel-body">
-                        <div class="row">
-                            <div class="alert alert-danger">
-                                <strong>Notice!</strong> Could not access records. Access might have been revoked. Contact
-                                admin or patient.
+                                        </div>
+                                    </form>
+                                    <div class="content-hospital1" style="text-align: center;">
+                                        <!-- <p id="addrHospital" hidden></p> -->
+                                    </div>
+                                    <div class="content-hospital" style="text-align: center;">
+                                        <!-- <p id="addrHospital" hidden></p> -->
+                                    </div>
+                                </div>
                             </div>
+
                         </div>
-                        <div class="row">
-                            <div class="col-sm-offset-1 col-sm-10">
-                                <table id="viewHospital" class="table table-hover">
-                                    <tr>
-                                        <th>Hospital</th>
-                                        <th class="publicKeyHospital">Public Key</th>
+                    </div>
 
-                                        <th>Action</th>
-                                    </tr>
-                                </table>
-                            </div>
+                </div>
+            </div>
+
+        </section>
+        <!-- JOB-->
+        <section class="resume-section" id="job">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="text-white">
+                        ......................................................................................................
+                    </h3>
+                    <h3 class="text-center">Show Hospital Working</h3>
+
+                </div>
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="alert alert-danger">
+                            <strong>Notice!</strong> Could not access records. Access might have been revoked. Contact
+                            admin or patient.
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-offset-1 col-sm-10">
+                            <table id="viewHospital" class="table table-hover">
+                                <tr>
+                                    <th>Hospital</th>
+                                    <th class="publicKeyHospital">Public Key</th>
+
+                                    <th>Action</th>
+                                </tr>
+                            </table>
                         </div>
                     </div>
                 </div>
+            </div>
 
-            </section>
-
+        </section>
 
     </div>
     <script src="js/jquery.js"></script>
@@ -357,13 +445,7 @@
     <script src="https://unpkg.com/ipfs-http-client@30.1.3/dist/index.js"></script>
     <script src="https://bundle.run/buffer@5.2.1"></script>
 
-
-
-
-
     <script>
-
-
         var ipfs = window.IpfsApi('localhost', '5001')
         const Buffer = window.IpfsApi().Buffer;
         var ailmentsDict = {};
@@ -378,45 +460,45 @@
         var url = new URL(url_string);
         var key;
         var docName = "";
-
         toggleRecordsButton = 0;
-
-        $(window).load(function () {
+        $(window).load(function() {
             connect();
             $(".alert-danger").hide();
             $(".alert-info").hide();
-
             key = web3.currentProvider.selectedAddress;
             key = key.toLocaleLowerCase();
-
             var a = 0;
             var b = 0;
-            contractInstance.get_healthcare.call(key, { gas: 1000000 }, function (error, result) {
+            contractInstance.get_healthcare.call(key, {
+                gas: 1000000
+            }, function(error, result) {
                 if (!error) {
                     a = result[0];
                     b = result[1];
                     docName = a;
                     $("#name").html(a);
                     $("#age").html(b.c[0]);
-                }
-
-                else
+                } else
                     console.error(error);
             });
             var patientAddressList = 0;
             // show all hospitall
-            contractInstance.get_hospital_list.call({ gas: 1000000 }, function (error,result) {
+            contractInstance.get_hospital_list.call({
+                gas: 1000000
+            }, function(error, result) {
                 if (!error) {
                     hospitalAddrList = result;
                     for (var i = 0; i < hospitalAddrList.length; i++) {
-                        var setlinkId = "hospitalAddrList"+i;
+                        var setlinkId = "hospitalAddrList" + i;
                         var addr = hospitalAddrList[i];
-                        contractInstance.get_hospital.call(hospitalAddrList[i], {gas:1000000}, function(error, result) {
+                        contractInstance.get_hospital.call(hospitalAddrList[i], {
+                            gas: 1000000
+                        }, function(error, result) {
                             var list = document.getElementById("showHospital");
                             if (!error) {
-                                [a, b, c, d, e] = result; 
+                                [a, b, c, d, e] = result;
                                 var option = document.createElement("option");
-                                option.text = a+" :"+b ;
+                                option.text = a + " :" + b;
                                 list.add(option);
                                 $(".content-hospita1").append(
                                     // button
@@ -429,70 +511,77 @@
                 } else console.log(error);
             });
             // showQueuePaitent
-            contractInstance.get_appointment_first.call(key, { gas: 1000000 }, function (error, result){
-                if(!error) {
-
+            contractInstance.get_appointment_first(key, {gas: 1000000}, function(error, result) {
+                if (!error) {
                     healthcareList = result;
-                    test = result;
-                    for(var i = 0; i < healthcareList.length; i++) {
-                        contractInstance.get_hospital.call(healthcareList[i], {gas: 1000000},function(error, result){
-
+                    console.log("!231231:", result);
+                    for (var i = 0; i < healthcareList.length; i++) {
+                        var addr = healthcareList[i];
+                        contractInstance.get_patient.call(healthcareList[i], {
+                            gas: 1000000
+                        }, function(error, result) {
                             var list = document.getElementById("showQueuePaitent");
+                            console.log("!231231:", result);
 
-                            if(!error) {
-                                [a, b, c, d, e] = result; 
+                            if (!error) {
+                                [a, b, c, d, e] = result;
                                 var option = document.createElement("option");
-                                option.text = a+" :"+b ;
+                                option.text = a + " :" + b;
                                 list.add(option);
-                                document.getElementById("addrPatient").innerText = test[0];
-                            }
-                            else
+                                document.getElementById("addrPatient").innerText = addr;
+                            } else
                                 console.error(error);
                         })
                         break;
                     }
-                }else
+                } else
                     console.error(error);
             });
             // show queue doctor sign
-            contractInstance.get_queue_doctor_sign_first.call(key, { gas: 1000000 }, function(error, result){
-                if(!error) {
+            contractInstance.get_queue_doctor_sign_first.call(key, {
+                gas: 1000000
+            }, function(error, result) {
+                if (!error) {
                     healthcareList = result;
                     test = result
-                    for(var i = 0; i < healthcareList.length; i++) {
+                    for (var i = 0; i < healthcareList.length; i++) {
                         var x1 = test[i];
-                        contractInstance.get_patient.call(healthcareList[i], {gas: 1000000},function(error, result){
+                        contractInstance.get_patient.call(healthcareList[i], {
+                            gas: 1000000
+                        }, function(error, result) {
                             var list = document.getElementById("permithealthcareList");
-
-                            if(!error) {
-                                [a, b, c, d, e] = result; 
+                            if (!error) {
+                                [a, b, c, d, e] = result;
                                 var option = document.createElement("option");
-                                option.text = a+" :"+b ;
+                                option.text = a + " :" + b;
                                 list.add(option);
                                 console.log(result);
                                 // document.getElementById("addrPatientWaitSignRecord").innerText = healthcareList[0];
-                                document.getElementsByClassName("content-request").item(0).innerHTML = `<p id="addrPatientWaitSignRecord${i}" hidden>${x1}</p>`
-                            }
-                            else
+                                document.getElementsByClassName("content-request").item(0)
+                                    .innerHTML =
+                                    `<p id="addrPatientWaitSignRecord${i}" hidden>${x1}</p>`
+                            } else
                                 console.error(error);
                         })
                     }
-                }else
+                } else
                     console.error(error);
             });
             // show hospital doctor wworking
-            contractInstance.get_job_doctor(key, { gas: 1000000 }, function (error, result) {
+            contractInstance.get_job_doctor(key, {
+                gas: 1000000
+            }, function(error, result) {
                 if (!error) {
                     hospitalAddressList = result;
-
-                    hospitalAddressList.forEach(function (hospitalAddress, index) {
+                    hospitalAddressList.forEach(function(hospitalAddress, index) {
                         var addr = hospitalAddress;
-                        contractInstance.get_hospital.call(hospitalAddress, { gas: 1000000 }, function (error, result) {
+                        contractInstance.get_hospital.call(hospitalAddress, {
+                            gas: 1000000
+                        }, function(error, result) {
                             var table = document.getElementById("viewHospital");
                             if (!error) {
                                 [a, b] = result;
                                 console.log(a);
-
                                 var row = table.insertRow(index + 1);
                                 var cell1 = row.insertCell(0);
                                 var cell2 = row.insertCell(1);
@@ -501,38 +590,31 @@
                                 cell2.className = "publicKeyHospital";
                                 cell1.innerHTML = a;
                                 cell2.innerHTML = hospitalAddress;
-                                cell3.innerHTML = `<input class="btn btn-danger" onclick="resignJob(this)" id="${addr}" type="button" value="Resign"></input>`;
+                                cell3.innerHTML =
+                                    `<input class="btn btn-danger" onclick="resignJob(this)" id="${addr}" type="button" value="Resign"></input>`;
                                 //cell4.innerHTML = `<input class="btn-outline-primary" type="file"  id="upload" type="button" onclick="abc(upload) placeholder="ho"></input>`;
-                            }
-                            else
+                            } else
                                 console.error(error);
                         })
                     })
-                }
-                else
+                } else
                     console.error(error);
             });
             // print out the healthcares to share emr
             // var healthcareList = 0;
             // console.log("Getting healthcare List");
             // contractInstance.get_patient_list({gas: 1000000},function(error, result){
-
             //     if(!error) {
-
             //         healthcareList = result;
-
             //         for(var i = 0; i < healthcareList.length; i++) {
             //             contractInstance.get_patient.call(healthcareList[i], {gas: 1000000},function(error, result){
-
             //                 var list = document.getElementById("permithealthcareList");
-
             //                 if(!error) {
             //                     [a, b, c, d, e] = result; 
             //                     var option = document.createElement("option");
             //                     option.text = a+" :"+b ;
             //                     list.add(option);
             //                     console.log(result);
-                                
             //                 }
             //                 else
             //                     console.error(error);
@@ -542,19 +624,20 @@
             //     else
             //         console.error(error);
             // });
-
-            contractInstance.get_accessed_patientlist_for_healthcare(key, { gas: 1000000 }, function (error, result) {
+            contractInstance.get_accessed_patientlist_for_healthcare(key, {
+                gas: 1000000
+            }, function(error, result) {
                 if (!error) {
                     patientAddressList = result;
-                    console.log("patientAddressList:",result);
-
-                    patientAddressList.forEach(function (patientAddress, index) {
-                        contractInstance.get_patient.call(patientAddress, { gas: 1000000 }, function (error, result) {
+                    console.log("patientAddressList:", result);
+                    patientAddressList.forEach(function(patientAddress, index) {
+                        contractInstance.get_patient.call(patientAddress, {
+                            gas: 1000000
+                        }, function(error, result) {
                             var table = document.getElementById("viewPatient");
                             if (!error) {
                                 [a, b] = result;
                                 console.log(a);
-
                                 var row = table.insertRow(index + 1);
                                 var cell1 = row.insertCell(0);
                                 var cell2 = row.insertCell(1);
@@ -563,17 +646,14 @@
                                 cell2.className = "publicKeyPatient";
                                 cell1.innerHTML = a;
                                 cell2.innerHTML = patientAddress;
-                                cell3.innerHTML = '<input class="btn btn-success" onclick="showRecords(this)" id="viewRecordsButton" type="button" value="View records"></input>';
+                                cell3.innerHTML =
+                                    '<input class="btn btn-success" onclick="showRecords(this)" id="viewRecordsButton" type="button" value="View records"></input>';
                                 //cell4.innerHTML = `<input class="btn-outline-primary" type="file"  id="upload" type="button" onclick="abc(upload) placeholder="ho"></input>`;
-
-
-                            }
-                            else
+                            } else
                                 console.error(error);
                         })
                     })
-                }
-                else
+                } else
                     console.error(error);
             });
             //lấy danh sách bệnh nhân 
@@ -605,12 +685,13 @@
         });
 
         function resignJob(element) {
-
             var table = document.getElementById("viewHospital");
             var index = element.parentNode.parentNode.rowIndex;
             var hospitalAddress = table.rows[index].cells[1].innerHTML;
             console.log(hospitalAddress);
-            contractInstance.resign_job_from_doctor(hospitalAddress, {gas : 1000000}, function(error) {
+            contractInstance.resign_job_from_doctor(hospitalAddress, {
+                gas: 1000000
+            }, function(error) {
                 if (!error) {
                     console.log("Resign job from doctor");
                 } else console.log(error);
@@ -618,23 +699,19 @@
         }
 
         function showRecords(element) {
-
             var table = document.getElementById("viewPatient");
             var index = element.parentNode.parentNode.rowIndex;
             var patientAddress = table.rows[index].cells[1].innerHTML;
-
             if (toggleRecordsButton % 2 == 0) {
-
                 var patientRecord = ""
-
-                contractInstance.get_hash(patientAddress, { gas: 1000000 }, function (error, result) {
+                contractInstance.get_hash(patientAddress, {
+                    gas: 1000000
+                }, function(error, result) {
                     if (!error) {
-
-                        $.get("http://localhost:8081/ipfs/" + result, function (data) {
-                            
+                        $.get("http://localhost:8081/ipfs/" + result, function(data) {
                             patientRecord = data;
-
-                            content = `<div class="tab-content">
+                            content =
+                                `<div class="tab-content">
                                         <div id="view${patientAddress}">
                                             <div class="row">
                                                 <div class="col-sm-12">
@@ -664,8 +741,8 @@
                                                                     <label class="control-label" for="details">Details:</label>
                                                                 </div>
                                                                 <div class="col-sm-10">
-                                                                    <textarea class="form-control" rows="5" id="details" placeholder="Enter details to be added" name = "Details" style="width: inherit" required autofocus></textarea>
-                                                                    <!-- <input type="text" class="form-control" id="details" placeholder="Enter details to be added" name = "Details" style="width: inherit" required autofocus> -->
+                                                                    <textarea class="form-control" rows="5" id="details" placeholder="Enter details to be added" name = "Details" style="width: inherit" required ></textarea>
+                                                                    <!-- <input type="text" class="form-control" id="details" placeholder="Enter details to be added" name = "Details" style="width: inherit" required > -->
 
                                                                     <div id="link2"></div>
                                                                     <div id="link">Nothing Choosen..<div>
@@ -673,14 +750,46 @@
                                                                     <input type="file" id="upload"  onclick="abc(upload);rk();" required></input>
 
                                                                     <!--button class="btn btn-primary" onclick = "convert()">No Attachment</button>-->
-                        
-                                                                    
 
+                                                                        <!-- Danh sách thuốc -->
+                                                                        <div id="medication-list">
+                                                                        <div class="medication-item">
+                                                                            <h3>Drug 1</h3>
+                                                                            <div class="form-row">
+                                                                                <div class="form-group">
+                                                                                    <label for="medicationName1">Drug Name:</label>
+                                                                                    <input type="text" id="medicationName1" name="medicationName[]" placeholder="Nhập tên thuốc" required>
+                                                                                </div>
+                                                                                <div class="form-group">
+                                                                                    <label for="quantity1">Quantity:</label>
+                                                                                    <input type="text" id="quantity1" name="quantity[]" placeholder="Nhập số lượng" required>
+                                                                                </div>
+                                                                                <div class="form-group">
+                                                                                    <label for="day1">Day:</label>
+                                                                                    <input type="text" id="day1" name="day[]" placeholder="Nhập ngày uống" required>
+                                                                                </div>
+                                                                                <div class="form-group">
+                                                                                    <label for="evening1">Evening:</label>
+                                                                                    <input type="text" id="evening1" name="evening[]" placeholder="Nhập buổi tối" required>
+                                                                                </div>
+                                                                                <div class="form-group">
+                                                                                    <label for="afternoon1">Afternoon:</label>
+                                                                                    <input type="text" id="afternoon1" name="afternoon[]" placeholder="Nhập buổi chiều" required>
+                                                                                </div>
+                                                                                <div class="form-group">
+                                                                                    <label for="night1">Night:</label>
+                                                                                    <input type="text" id="night1" name="night[]" placeholder="Nhập buổi đêm" required>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        </div>
+<button type="button" id="addMedication" onclick="addMedication()">Thêm thuốc</button>
                                                                 </div>
                                                             </div>    
                                                         </div>
                                                         <div class="form-group col-sm-2">
-                                                            <button class="btn btn-primary" onclick = "submitDiagnosis(this,`+ index + `)">Submit</button>
+                                                            <button class="btn btn-primary" onclick = "submitDiagnosis(this,` +
+                                index + `)">Submit</button>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -693,25 +802,18 @@
                 
                                             </div>
                                         </div>`
-
                             var row1 = table.insertRow(index + 1);
                             var cell1 = row1.insertCell(0);
                             cell1.colSpan = 3;
-
                             cell1.innerHTML = content;
-
                         })
-
-
                     } else {
                         console.log(error);
                     }
                 })
-
                 toggleRecordsButton += 1
                 element.value = "Hide Records";
                 element.className = "btn btn-danger"
-
             } else {
                 row = table.rows[index + 1];
                 $(row).hide();
@@ -719,7 +821,6 @@
                 element.value = "View Records";
                 element.className = "btn btn-success"
             }
-
         }
 
         function ClearDropDownbox() {
@@ -729,7 +830,11 @@
         function accessRequestPatient() {
             var patientId = document.getElementById("addrPatient");
             // console.log(patientId.textContent);
-            contractInstance.access_request_patient.sendTransaction(patientId.textContent, { from: key, gas: 1000000, value: web3.toWei(2, 'ether') }, function (error) {
+            contractInstance.access_request_patient.sendTransaction(patientId.textContent, {
+                from: key,
+                gas: 1000000,
+                value: web3.toWei(2, 'ether')
+            }, function(error) {
                 if (!error) {
                     console.log("Patient Access Requested");
                 } else
@@ -740,22 +845,23 @@
         function accessApply() {
             var list = document.getElementById("showHospital");
             index = list.selectedIndex;
-
-            contractInstance.get_hospital_list(function(error, result){
-                if(!error){
-                    var hospitalAddr = result[index-1];
-                    contractInstance.doctor_apply.sendTransaction(hospitalAddr, { from: key, gas: 1000000, value: web3.toWei(2, 'ether') }, function (error) {
-                        if(!error) {
+            contractInstance.get_hospital_list(function(error, result) {
+                if (!error) {
+                    var hospitalAddr = result[index - 1];
+                    contractInstance.doctor_apply.sendTransaction(hospitalAddr, {
+                        from: key,
+                        gas: 1000000,
+                        value: web3.toWei(2, 'ether')
+                    }, function(error) {
+                        if (!error) {
                             console.log("Doctor Applied");
                         } else console.log(error);
                     });
-                    
                 } else {
                     console.log(error);
                 }
             });
         }
-
         $("#showQueuePaitent").on('change', function() {
             $(".content-request").append(
                 `<button class="btn btn-primary" onclick="accessRequestPatient()">Submit</button>`
@@ -770,41 +876,28 @@
         $('#permithealthcareList').on('change', function() { // fix
             var list = document.getElementById("permithealthcareList");
             index = list.selectedIndex;
-
             var healthcareList = 0;
             var element = document.getElementById(`addrPatientWaitSignRecord${index}`);
-            console.log("23423423:",`addrPatientWaitSignRecord${index}`)
             var healthcareToBeAdded = element.textContent;
             // contractInstance.get_patient_list({gas: 1000000}, function(error, result){
-                
             //     if(!error) {
             //         // console.log(index);
-
             //         healthcareList = result;
             //         healthcareToBeAdded = healthcareList[index-1];
-                    contractInstance.get_hash(healthcareToBeAdded, { gas: 1000000 }, function (error, result) {
-                    if (!error) {
-
-                        $.get("http://localhost:8081/ipfs/" + result, function (data) {
-                            
-                            patientRecord = data;
-                            $(".content-record").append(`
+            contractInstance.get_hash(healthcareToBeAdded, {
+                gas: 1000000
+            }, function(error, result) {
+                if (!error) {
+                    $.get("http://localhost:8081/ipfs/" + result, function(data) {
+                        patientRecord = data;
+                        $(".content-record").append(`
                                 <p id="showAdress" hidden>${healthcareToBeAdded}</p>
                                 <div class="row">
                                     <div class="form-group col-sm-10">
                                         <div class="row">
-                                            <div class="col-sm-2"><label for="ailmentsList1" class="control-label">Diagnosis:</label></div>
+                                            <div class="col-sm-2"><label for="ailmentsList1${healthcareToBeAdded}" class="control-label">Diagnosis:</label></div>
                                             <div class="col-sm-10">
-                                                <select class="form-control" id="ailmentsList1${healthcareToBeAdded}" style="width:inherit;" required>
-                                                    <option selected disabled>-- Please Select --</option>
-                                                    <option value = "0">Common Flu</option>
-                                                    <option value = "1">Viral Infection</option>
-                                                    <option value = "2">Cancer</option>
-                                                    <option value = "3">Tumor</option>
-                                                    <option value = "4">Covid-19</option>
-                                                    <option value = "5">Heart-Disorder</option>
-                                                    <option value = "6">Other</option>
-                                                </select>
+                                                <input id="ailmentsList1${healthcareToBeAdded}" style="width:inherit;" required placeholder="Enter name of disease"></input>
                                             </div>
                                         </div>
                                     </div>
@@ -825,12 +918,45 @@
                                                 <input type="file" id="upload1"  onclick="abc(upload1);rk1();" required></input>
 
                                                 <!--button class="btn btn-primary" onclick = "convert()">No Attachment</button>-->
-
+                                                <!-- Danh sách thuốc -->
+                                                <div id="medication-list">
+                                                <div class="medication-item">
+                                                    <h3>Drug 1</h3>
+                                                    <div class="form-row">
+                                                        <div class="form-group">
+                                                            <label for="medicationName1">Drug Name:</label>
+                                                            <input type="text" id="medicationName1" name="medicationName[]" placeholder="Nhập tên thuốc" required>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label for="quantity1">Quantity:</label>
+                                                            <input type="text" id="quantity1" name="quantity[]" placeholder="Nhập số lượng" required>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label for="day1">Day:</label>
+                                                            <input type="text" id="day1" name="day[]" placeholder="Nhập ngày uống" required>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label for="evening1">Evening:</label>
+                                                            <input type="text" id="evening1" name="evening[]" placeholder="Nhập buổi tối" required>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label for="afternoon1">Afternoon:</label>
+                                                            <input type="text" id="afternoon1" name="afternoon[]" placeholder="Nhập buổi chiều" required>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label for="night1">Night:</label>
+                                                            <input type="text" id="night1" name="night[]" placeholder="Nhập buổi đêm" required>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                </div>
+                                                <button type="button" id="addMedication" onclick="addMedication()">Thêm thuốc</button>
                                             </div>
                                         </div>    
                                     </div>
                                     <div class="form-group col-sm-2">
-                                        <button class="btn btn-primary" onclick = "submitDiagnosisForRecord(this,`+ index + `)">Submit</button>
+                                        <button class="btn btn-primary" onclick = "submitDiagnosisForRecord(this,` +
+                            index + `)">Submit</button>
                                     </div>
                                 </div>
                                 <div class="row" hidden>
@@ -839,50 +965,38 @@
                                     </div>
                                 </div>
                             `)
-                        })
-                    }})
-                    
-
-                    
-                    // contractInstance.permit_access.sendTransaction(healthcareToBeAdded, {from: key, gas: 1000000, value: web3.toWei(2, 'ether')}, function(error){
-                    //     if (!error) {
-                    //         var table = document.getElementById("accessDoc");
-                    //         noRows = table.rows.length;
-                    //         var row = table.insertRow(noRows);
-                    //         var cell1 = row.insertCell(0);
-                    //         var cell2 = row.insertCell(1);
-                    //         var cell3 = row.insertCell(2);
-
-                    //         cell2.className = "publicKeyhealthcare";
-                    //         cell1.innerHTML = $("#permithealthcareList").val();
-                    //         cell2.innerHTML = healthcareToBeAdded;
-                    //         cell3.innerHTML = '<button onclick="revokeAccess(this)" class="btn btn-danger">Revoke access</button>';
-
-                    //     } else {
-                    //         $(".alert-info").show();
-                    //         console.log(error);
-                    //     }
-                                                
-                    // })
-
+                    })
+                }
+            })
+            // contractInstance.permit_access.sendTransaction(healthcareToBeAdded, {from: key, gas: 1000000, value: web3.toWei(2, 'ether')}, function(error){
+            //     if (!error) {
+            //         var table = document.getElementById("accessDoc");
+            //         noRows = table.rows.length;
+            //         var row = table.insertRow(noRows);
+            //         var cell1 = row.insertCell(0);
+            //         var cell2 = row.insertCell(1);
+            //         var cell3 = row.insertCell(2);
+            //         cell2.className = "publicKeyhealthcare";
+            //         cell1.innerHTML = $("#permithealthcareList").val();
+            //         cell2.innerHTML = healthcareToBeAdded;
+            //         cell3.innerHTML = '<button onclick="revokeAccess(this)" class="btn btn-danger">Revoke access</button>';
+            //     } else {
+            //         $(".alert-info").show();
+            //         console.log(error);
+            //     }
+            // })
             //     } else
             //         console.log(error);
             // })
         })
-        
         // Cần sử ký sự kiên tại đây
         // function giveAccess() {
-
         //     var list = document.getElementById("permithealthcareList");
         //     index = list.selectedIndex;
-
         //     var healthcareList = 0;
-
         //     contractInstance.get_patient_list({gas: 1000000}, function(error, result){
-
         //         if(!error) {
         //             // console.log(index);
-
         //             healthcareList = result;
         //             healthcareToBeAdded = healthcareList[index-1];
         //             contractInstance.permit_access.sendTransaction(healthcareToBeAdded, {from: key, gas: 1000000, value: web3.toWei(2, 'ether')}, function(error){
@@ -893,45 +1007,39 @@
         //                     var cell1 = row.insertCell(0);
         //                     var cell2 = row.insertCell(1);
         //                     var cell3 = row.insertCell(2);
-
         //                     cell2.className = "publicKeyhealthcare";
         //                     cell1.innerHTML = $("#permithealthcareList").val();
         //                     cell2.innerHTML = healthcareToBeAdded;
         //                     cell3.innerHTML = '<button onclick="revokeAccess(this)" class="btn btn-danger">Revoke access</button>';
-
         //                 } else {
         //                     $(".alert-info").show();
         //                     console.log(error);
         //                 }
-                                                
         //             })
-
         //         } else
         //             console.log(error);
         //     })
         // }
-
-
         function abc(upload) {
             const ipfs = window.IpfsHttpClient({
                 host: 'localhost', // Địa chỉ node IPFS của bạn
                 port: '5001', // Cổng IPFS mặc định
                 protocol: 'http' // Hoặc 'https' nếu cần
             });
-
-            $("#upload").on("change", function () {
+            $("#upload").on("change", function() {
                 document.getElementById("link").innerHTML = "Starting upload...";
                 var reader = new FileReader();
-                reader.onload = function (e) {
+                reader.onload = function(e) {
                     document.getElementById("link").innerHTML = "Uploading file .....";
                     const buffer = Buffer.from(reader.result);
                     ipfs.add(buffer)
                         .then((result) => {
                             console.log(result);
-                            let ipfsLink1 = "<a target='_blank' href='http://localhost:8081/ipfs/" + result[0].hash + "'>View" + ' File' + "</a>";
+                            let ipfsLink1 = "<a target='_blank' href='http://localhost:8081/ipfs/" +
+                                result[0].hash + "'>View" + ' File' + "</a>";
                             console.log("link :" + ipfsLink1)
                             document.getElementById("link").innerHTML = ipfsLink1;
-                            var ipfsLink = "https://ipfs.io/ipfs/" + result[0].hash ;
+                            var ipfsLink = "https://ipfs.io/ipfs/" + result[0].hash;
                             console.log("linksds :" + ipfsLink)
                             document.getElementById("link").src = ipfsLink;
                         })
@@ -942,20 +1050,20 @@
                 }
                 reader.readAsArrayBuffer(this.files[0]);
             });
-
-            $("#upload1").on("change", function () {
+            $("#upload1").on("change", function() {
                 document.getElementById("link1").innerHTML = "Starting upload...";
                 var reader = new FileReader();
-                reader.onload = function (e) {
+                reader.onload = function(e) {
                     document.getElementById("link1").innerHTML = "Uploading file .....";
                     const buffer = Buffer.from(reader.result);
                     ipfs.add(buffer)
                         .then((result) => {
                             console.log(result);
-                            let ipfsLink1 = "<a target='_blank' href='http://localhost:8081/ipfs/" + result[0].hash + "'>View" + ' File' + "</a>";
+                            let ipfsLink1 = "<a target='_blank' href='http://localhost:8081/ipfs/" +
+                                result[0].hash + "'>View" + ' File' + "</a>";
                             console.log("link :" + ipfsLink1)
                             document.getElementById("link1").innerHTML = ipfsLink1;
-                            var ipfsLink = "https://ipfs.io/ipfs/" + result[0].hash ;
+                            var ipfsLink = "https://ipfs.io/ipfs/" + result[0].hash;
                             console.log("linksds :" + ipfsLink)
                             document.getElementById("link1").src = ipfsLink;
                         })
@@ -966,18 +1074,16 @@
                 }
                 reader.readAsArrayBuffer(this.files[0]);
             });
-
         }
 
         function rk() {
             var test = 1;
             document.getElementById("link2").src = test;
-
         }
+
         function rk1() {
             var test = 1;
             document.getElementById("link21").src = test;
-
         }
 
         function getDateTime() {
@@ -985,75 +1091,75 @@
                 return (num >= 0 && num < 10) ? "0" + num : num + "";
             }
             var now = new Date();
-            var strDateTime = [[AddZero(now.getDate()),
-            AddZero(now.getMonth() + 1),
-            now.getFullYear()].join("/"),
-            [AddZero(now.getHours()),
-            AddZero(now.getMinutes())].join(":"),
-            now.getHours() >= 12 ? "" : ""].join(" ");
+            var strDateTime = [
+                [AddZero(now.getDate()),
+                    AddZero(now.getMonth() + 1),
+                    now.getFullYear()
+                ].join("/"),
+                [AddZero(now.getHours()),
+                    AddZero(now.getMinutes())
+                ].join(":"),
+                now.getHours() >= 12 ? "" : ""
+            ].join(" ");
             return strDateTime;
         }
+
         function giveAccessToPatient() {
             var list = document.getElementById("patientList");
             index = list.selectedIndex;
             var patientList = 0;
-            contractInstance.get_patient_list({gas: 1000000}, function(error, result){
-            if(!error) {
-                patientList = result;
-                patientToBeAdded = patientList[index-1];
-       
-                console.log("patientToBeAdded", patientToBeAdded);
-                        console.log("key : ", key);
-                contractInstance.doctor_permit_access.sendTransaction(patientToBeAdded, {from: key, gas: 1000000, value: web3.toWei(1, 'ether')}, function(error){
-                    if (!error) {
-                        console.log("patientToBeAdded", patientToBeAdded);
-                        console.log("key : ", key);
-                        console.log("Contract successfull");
-                    } else {
-                        $(".alert-info").show();
-                        console.log(error);
-                    }
-                                            
-                })
-            } else
-                console.log(error);
-        })
+            contractInstance.get_patient_list({
+                gas: 1000000
+            }, function(error, result) {
+                if (!error) {
+                    patientList = result;
+                    patientToBeAdded = patientList[index - 1];
+                    console.log("patientToBeAdded", patientToBeAdded);
+                    console.log("key : ", key);
+                    contractInstance.doctor_permit_access.sendTransaction(patientToBeAdded, {
+                        from: key,
+                        gas: 1000000,
+                        value: web3.toWei(1, 'ether')
+                    }, function(error) {
+                        if (!error) {
+                            console.log("patientToBeAdded", patientToBeAdded);
+                            console.log("key : ", key);
+                            console.log("Contract successfull");
+                        } else {
+                            $(".alert-info").show();
+                            console.log(error);
+                        }
+                    })
+                } else
+                    console.log(error);
+            })
         }
 
         function submitDiagnosis(element, index) {
             var table = document.getElementById("viewPatient");
-            
             var patientAddress = table.rows[index].cells[1].innerHTML;
-
             console.log(patientAddress);
             var diagnosis = $("#ailmentsList" + patientAddress).val();
             diagnosis = parseInt(diagnosis);
             var diagnosed = ailmentsDict[diagnosis];
             var comments = document.getElementById("details").value;
-
             //var app = document.getElementById("link").innerHTML;  
             var app = document.getElementById("link").innerHTML;
-
             //var url4="https://cloudflare-ipfs.com/ipfs/QmWqhvjor8YtepnN5c57pkAZeXyFMtDHFub8ML6eRUU2zA"
             //document.getElementById("link").src=url4;
-
             var jbl = document.getElementById("link2").src;
             if (!isNaN(jbl)) {
                 var app = document.getElementById("link").src
             }
-
             var oldRecords = $("#records" + patientAddress).html();
-            
             var text;
-
-            if(!app.includes('https')) {
+            if (!app.includes('https')) {
                 text = `<button class="btn btn-info">Không có ảnh</button>`
             } else {
                 const imgId = `img_${Math.random().toString(36).substr(2, 9)}`;
                 text = `<button onclick="toggleImage('${imgId}')" class="btn btn-info">Hiển thị Ảnh</button>
 <img id="${imgId}" src="${app}" style="display:none; width:70%; height:auto;" />`;
             }
-            
             var newRecords =
                 `<div style="border-bottom:1px solid;">
 <span style="font-weight:bold">Diagnosed By</span>   : ${docName}
@@ -1064,23 +1170,21 @@
 ${text}
 </div>
 `
-
             var updatedRecords = newRecords + oldRecords;
             if (!isNaN(diagnosis)) {
-
                 var buffer = Buffer(updatedRecords);
-
                 ipfs.files.add(buffer, (error, result) => {
                     if (error) {
                         console.log(error)
                     } else {
                         ipfshash = result[0].hash;
-                        contractInstance.submitfile(patientAddress, 3, ipfshash, { gas: 1000000 }, function (error, result) {
+                        contractInstance.submitfile(patientAddress, 3, ipfshash, {
+                            gas: 1000000
+                        }, function(error, result) {
                             if (!error) {
                                 alert("Diagnosis has been submitted.");
                                 // delete content row
                                 table.deleteRow(index + 1);
-
                                 // delete main row of corresponding content row
                                 table.deleteRow(index);
                             } else {
@@ -1090,47 +1194,190 @@ ${text}
                         })
                     }
                 });
-
-            }
-            else {
+            } else {
                 alert("Select a diagnosis");
             }
         }
 
+//         function submitDiagnosisForRecord(element, index) {
+//             var table = document.getElementById("showAdress");
+//             var patientAddress = table.textContent;
+//             var diagnosis = $("#ailmentsList1" + patientAddress).val();
+//             diagnosis = parseInt(diagnosis);
+//             console.log("diagnosis", diagnosis);
+//             var diagnosed = ailmentsDict[diagnosis];
+//             var comments = document.getElementById("details1").value;
+//             //var app = document.getElementById("link").innerHTML;  
+//             var app = document.getElementById("link1").innerHTML;
+//             //var url4="https://cloudflare-ipfs.com/ipfs/QmWqhvjor8YtepnN5c57pkAZeXyFMtDHFub8ML6eRUU2zA"
+//             //document.getElementById("link").src=url4;
+//             var jbl = document.getElementById("link21").src;
+//             if (!isNaN(jbl)) {
+//                 var app = document.getElementById("link1").src
+//             }
+//             var oldRecords = $("#records1" + patientAddress).html();
+//             var text;
+
+//             if (!app.includes('https')) {
+//                 text = `<button class="btn btn-info">Không có ảnh</button>`
+//             } else {
+//                 const imgId = `img_${Math.random().toString(36).substr(2, 9)}`;
+//                 text = `<button onclick="toggleImage('${imgId}')" class="btn btn-info">Hiển thị Ảnh</button>
+// <img id="${imgId}" src="${app}" style="display:none; width:70%; height:auto;" />`;
+//             }
+
+//             var newRecords =
+//                 `<div style="border-bottom:1px solid;">
+// <span style="font-weight:bold">Diagnosed By</span>   : ${docName}
+// <span style="font-weight:bold">Diagnosis Time</span> : ${getDateTime()}
+// <span style="font-weight:bold">Diagnosis</span>      : ${diagnosed}
+// <span style="font-weight:bold">Comments</span>       : ${comments}
+// </br>
+// ${text}
+// </div>
+// `
+//             var updatedRecords = newRecords + oldRecords;
+
+//             console.log(updatedRecords);
+
+//             if (!isNaN(diagnosis)) {
+//                 var buffer = Buffer(updatedRecords);
+//                 ipfs.files.add(buffer, (error, result) => {
+//                     if (error) {
+//                         console.log(error)
+//                     } else {
+//                         // key = web3.currentProvider.selectedAddress;
+//                         // key = key.toLocaleLowerCase();
+//                         // contractInstance.permit_access.sendTransaction(key, { from: patientAddress, gas: 1000000, value: web3.toWei(2, 'ether') }, function (error) {
+//                         //     if (!error) {
+//                         //         console.log("patientAddress : ", patientAddress);
+//                         //         console.log("key : ", key);
+//                         //         console.log("Contract successfull");
+//                         //     } else {
+//                         //         $(".alert-info").show();
+//                         //         console.log(error);
+//                         //     }
+//                         // })
+//                         ipfshash = result[0].hash;
+//                         // contractInstance.submitfile(patientAddress, diagnosis, ipfshash, { gas: 1000000 }, function (error, result) {
+//                         //     if (!error) {
+//                         //         alert("Diagnosis has been submitted.");
+//                         //         // delete content row
+//                         //         //table.deleteRow(index + 1);
+//                         //         // delete main row of corresponding content row
+//                         //         //table.deleteRow(index);
+//                         //     } else {
+//                         //         $(".alert-danger1").show();
+//                         //         console.log(error);
+//                         //     }
+//                         // })
+//                         contractInstance.permit_access_and_submitfile.sendTransaction(key, patientAddress,
+//                             diagnosis, ipfshash, {
+//                                 from: patientAddress,
+//                                 gas: 1000000,
+//                                 value: web3.toWei(2, 'ether')
+//                             },
+//                             function(error, result) {
+//                                 if (!error) {
+//                                     alert("Diagnosis has been submitted.");
+//                                     // delete content row
+//                                     //table.deleteRow(index + 1);
+//                                     // delete main row of corresponding content row
+//                                     //table.deleteRow(index);
+//                                 } else {
+//                                     $(".alert-danger1").show();
+//                                     console.log(error);
+//                                 }
+//                             })
+//                     }
+//                 });
+//             } else {
+//                 alert("Select a diagnosis");
+//             }
+//         }
+        // Hàm để thêm thuốc mới vào danh sách thuốc
+        function addMedication() {
+            // Lấy danh sách thuốc
+            var medicationList = document.getElementById('medication-list');
+            
+            // Tạo phần tử thuốc mới
+            var newMedication = document.createElement('div');
+            newMedication.classList.add('medication-item');
+            
+            // Lấy số thứ tự của thuốc mới (dựa trên số lượng thuốc hiện tại trong danh sách)
+            var drugIndex = medicationList.children.length + 1;
+            
+            // Tạo nội dung cho thuốc mới
+            newMedication.innerHTML = `
+                <h3>Drug ${drugIndex}</h3>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="medicationName${drugIndex}">Drug Name:</label>
+                        <input type="text" id="medicationName${drugIndex}" name="medicationName[]" placeholder="Nhập tên thuốc" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="quantity${drugIndex}">Quantity:</label>
+                        <input type="text" id="quantity${drugIndex}" name="quantity[]" placeholder="Nhập số lượng" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="day${drugIndex}">Day:</label>
+                        <input type="text" id="day${drugIndex}" name="day[]" placeholder="Nhập ngày uống" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="evening${drugIndex}">Evening:</label>
+                        <input type="text" id="evening${drugIndex}" name="evening[]" placeholder="Nhập buổi tối" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="afternoon${drugIndex}">Afternoon:</label>
+                        <input type="text" id="afternoon${drugIndex}" name="afternoon[]" placeholder="Nhập buổi chiều" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="night${drugIndex}">Night:</label>
+                        <input type="text" id="night${drugIndex}" name="night[]" placeholder="Nhập buổi đêm" required>
+                    </div>
+                </div>
+            `;
+            
+            // Thêm phần tử thuốc mới vào danh sách
+            medicationList.appendChild(newMedication);
+        }
+
+
         function submitDiagnosisForRecord(element, index) {
             var table = document.getElementById("showAdress");
-            
             var patientAddress = table.textContent;
 
-            var diagnosis = $("#ailmentsList1" + patientAddress).val();
-            diagnosis = parseInt(diagnosis);
-            console.log("diagnosis",diagnosis);
-            var diagnosed = ailmentsDict[diagnosis];
+            // var diagnosis = $("#ailmentsList1" + patientAddress).val();
+            // diagnosis = parseInt(diagnosis);
+            // console.log("diagnosis", diagnosis);
+
+            var diagnosis = $("#ailmentsList1" + patientAddress);
+            var diagnosed = diagnosis.innerText;
+            console.log(diagnosis);
+
+            // var diagnosed = ailmentsDict[diagnosis];
+
             var comments = document.getElementById("details1").value;
 
-            //var app = document.getElementById("link").innerHTML;  
             var app = document.getElementById("link1").innerHTML;
 
-            //var url4="https://cloudflare-ipfs.com/ipfs/QmWqhvjor8YtepnN5c57pkAZeXyFMtDHFub8ML6eRUU2zA"
-            //document.getElementById("link").src=url4;
-
             var jbl = document.getElementById("link21").src;
+            
             if (!isNaN(jbl)) {
                 var app = document.getElementById("link1").src
             }
-
-            var oldRecords = $("#records1" + patientAddress).html();
             
+            var oldRecords = $("#records1" + patientAddress).html();
             var text;
 
-            if(!app.includes('https')) {
+            if (!app.includes('https')) {
                 text = `<button class="btn btn-info">Không có ảnh</button>`
             } else {
                 const imgId = `img_${Math.random().toString(36).substr(2, 9)}`;
                 text = `<button onclick="toggleImage('${imgId}')" class="btn btn-info">Hiển thị Ảnh</button>
 <img id="${imgId}" src="${app}" style="display:none; width:70%; height:auto;" />`;
             }
-            
+
             var newRecords =
                 `<div style="border-bottom:1px solid;">
 <span style="font-weight:bold">Diagnosed By</span>   : ${docName}
@@ -1141,69 +1388,66 @@ ${text}
 ${text}
 </div>
 `
+            var updatedRecords = newRecords; // + oldRecords;
 
-            var updatedRecords = newRecords + oldRecords;
             console.log(updatedRecords);
-            if (!isNaN(diagnosis)) {
-
-                var buffer = Buffer(updatedRecords);
-
-                ipfs.files.add(buffer, (error, result) => {
-                    if (error) {
-                        console.log(error)
-                    } else {
-                        // key = web3.currentProvider.selectedAddress;
-                        // key = key.toLocaleLowerCase();
-                        // contractInstance.permit_access.sendTransaction(key, { from: patientAddress, gas: 1000000, value: web3.toWei(2, 'ether') }, function (error) {
-                        //     if (!error) {
-                        //         console.log("patientAddress : ", patientAddress);
-                        //         console.log("key : ", key);
-                        //         console.log("Contract successfull");
-                        //     } else {
-                        //         $(".alert-info").show();
-                        //         console.log(error);
-                        //     }
-                                                    
-                        // })
-                        ipfshash = result[0].hash;
-                        
-                        // contractInstance.submitfile(patientAddress, diagnosis, ipfshash, { gas: 1000000 }, function (error, result) {
-                        //     if (!error) {
-                        //         alert("Diagnosis has been submitted.");
-                        //         // delete content row
-                        //         //table.deleteRow(index + 1);
-
-                        //         // delete main row of corresponding content row
-                        //         //table.deleteRow(index);
-                        //     } else {
-                        //         $(".alert-danger1").show();
-                        //         console.log(error);
-                        //     }
-                        // })
-
-                        contractInstance.permit_access_and_submitfile.sendTransaction(key, patientAddress, diagnosis, ipfshash, { from: patientAddress, gas: 1000000, value: web3.toWei(2, 'ether') }, function (error, result) {
-                            if (!error) {
-                                alert("Diagnosis has been submitted.");
-                                // delete content row
-                                //table.deleteRow(index + 1);
-
-                                // delete main row of corresponding content row
-                                //table.deleteRow(index);
-                            } else {
-                                $(".alert-danger1").show();
-                                console.log(error);
-                            }
-                        })
-                    }
-                });
-
-            }
-            else {
-                alert("Select a diagnosis");
-            }
+            
+            // if (!isNaN(diagnosis)) {
+            //     var buffer = Buffer(updatedRecords);
+            //     ipfs.files.add(buffer, (error, result) => {
+            //         if (error) {
+            //             console.log(error)
+            //         } else {
+            //             // key = web3.currentProvider.selectedAddress;
+            //             // key = key.toLocaleLowerCase();
+            //             // contractInstance.permit_access.sendTransaction(key, { from: patientAddress, gas: 1000000, value: web3.toWei(2, 'ether') }, function (error) {
+            //             //     if (!error) {
+            //             //         console.log("patientAddress : ", patientAddress);
+            //             //         console.log("key : ", key);
+            //             //         console.log("Contract successfull");
+            //             //     } else {
+            //             //         $(".alert-info").show();
+            //             //         console.log(error);
+            //             //     }
+            //             // })
+            //             ipfshash = result[0].hash;
+            //             // contractInstance.submitfile(patientAddress, diagnosis, ipfshash, { gas: 1000000 }, function (error, result) {
+            //             //     if (!error) {
+            //             //         alert("Diagnosis has been submitted.");
+            //             //         // delete content row
+            //             //         //table.deleteRow(index + 1);
+            //             //         // delete main row of corresponding content row
+            //             //         //table.deleteRow(index);
+            //             //     } else {
+            //             //         $(".alert-danger1").show();
+            //             //         console.log(error);
+            //             //     }
+            //             // })
+            //             // contractInstance.permit_access_and_submitfile.sendTransaction(key, patientAddress,
+            //             //     diagnosis, ipfshash, {
+            //             //         from: patientAddress,
+            //             //         gas: 1000000,
+            //             //         value: web3.toWei(2, 'ether')
+            //             //     },
+            //             //     function(error, result) {
+            //             //         if (!error) {
+            //             //             alert("Diagnosis has been submitted.");
+            //             //             // delete content row
+            //             //             //table.deleteRow(index + 1);
+            //             //             // delete main row of corresponding content row
+            //             //             //table.deleteRow(index);
+            //             //         } else {
+            //             //             $(".alert-danger1").show();
+            //             //             console.log(error);
+            //             //         }
+            //             //     })
+            //         }
+            //     });
+            // } else {
+            //     alert("Select a diagnosis");
+            // }
         }
     </script>
-
 </body>
 
 </html>
