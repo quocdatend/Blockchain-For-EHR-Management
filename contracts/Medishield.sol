@@ -9,6 +9,8 @@ contract Medishield {
         string diagnosis; // uint[]
         string record;
         address[] healthcareRequestList;
+        // string[] listMedicine;
+        address[] doctorSigns;   
     }
     
     struct healthcare {
@@ -24,8 +26,8 @@ contract Medishield {
     }
 
     struct medicine{
-        string typeDisease; // loai benh
-        uint quantity;      // Số lượng
+        // string typeDisease; // loai benh
+        // uint quantity;      // Số lượng
         string[] listMedicine;
         address[] doctor;             // chu ky
     }
@@ -41,7 +43,7 @@ contract Medishield {
     mapping (address => healthcare) healthcareInfo;
     //new
     mapping (address => healthcare) hospitalInfo;
-    mapping (address => medicine) medicineInfo;
+    // mapping (address => medicine) medicineInfo;
     //mapping (address => records) writeRecord;
     //
     mapping (address => address) Empty;
@@ -57,10 +59,10 @@ contract Medishield {
             p.record = _hash;
             // Records memory a;
             // p.records = a;
-            medicine memory a;
-            a.typeDisease = "";
-            a.quantity = 0;
-            medicineInfo[msg.sender] = a;
+            // medicine memory a;
+            // a.typeDisease = "";
+            // a.quantity = 0;
+            // medicineInfo[msg.sender] = a;
             patientInfo[msg.sender] = p;
             patientList.push(addr)-1;
             return _name;
@@ -134,6 +136,15 @@ contract Medishield {
         creditPool += 2;
         hospitalInfo[addr].doctorAccessList.push(msg.sender)-1;
         healthcareInfo[msg.sender].accessJob.push(addr)-1;
+    }
+    function sign_records(address addr, string memory _hash) payable public {
+        require(msg.value == 2 ether);
+        creditPool += 2;
+        patientInfo[addr].doctorSigns.push(msg.sender)-1;
+        set_hash(addr, _hash);
+        // patientInfo[addr].listMedicine.push(_hash)-1;
+        creditPool -= 2;
+        remove_element_in_array(healthcareInfo[msg.sender].queuDoctorSign, addr);
     }
     //
     function permit_access_and_remove_doctor_permit_access(address addr) payable public {
@@ -275,6 +286,12 @@ contract Medishield {
     function quit_job_from_hospital(address addr) public {
         remove_element_in_array(hospitalInfo[msg.sender].doctorAccessList, addr);
         remove_element_in_array(healthcareInfo[addr].accessJob, msg.sender);
+    }
+    // function get_medicine_by_patient(address addr) public view returns (string[] memory){
+    //     return patientInfo[addr].listMedicine;
+    // }
+    function get_doctor_in_medicine(address  addr) public view   returns (address[] memory) {
+        return patientInfo[addr].doctorSigns;
     }
     //
     function revoke_access(address daddr) public payable{
