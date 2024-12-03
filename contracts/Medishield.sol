@@ -10,7 +10,12 @@ contract Medishield {
         string record;
         address[] healthcareRequestList;
         // string[] listMedicine;
-        address[] doctorSigns;   
+        address[] doctorSigns;
+        // request order medicine
+        address[] waitHandleRequestOrderMedicine; // 1
+        address[] wasDeletedRequestOrderMedicine;  // -1
+        address[] successRequestOrderMedicine; // 3
+        address[] waitPaymentRequestOrderMedicine; // 2
     }
     
     struct healthcare {
@@ -23,14 +28,16 @@ contract Medishield {
         address[] queuePatientGetMedicine; // hospital
         address[] doctorAccessList; // hospital
         address[] accessJob; // doctor
+        address[] patientOrderMedicineList; //  hospital
+        string medincines; // hospital
     }
 
-    struct medicine{
-        // string typeDisease; // loai benh
-        // uint quantity;      // Số lượng
-        string[] listMedicine;
-        address[] doctor;             // chu ky
-    }
+    // struct medicine{
+    //     // string typeDisease; // loai benh
+    //     // uint quantity;      // Số lượng
+    //     string[] listMedicine;
+    //     address[] doctor;             // chu ky
+    // }
 
     uint creditPool;
     address[] public patientList;
@@ -142,9 +149,14 @@ contract Medishield {
         creditPool += 2;
         patientInfo[addr].doctorSigns.push(msg.sender)-1;
         set_hash(addr, _hash);
-        // patientInfo[addr].listMedicine.push(_hash)-1;
         creditPool -= 2;
         remove_element_in_array(healthcareInfo[msg.sender].queuDoctorSign, addr);
+    }
+    function request_ordor_medicine(address addr) payable public {
+        require(msg.value == 2 ether);
+        creditPool += 2;
+        hospitalInfo[addr].patientOrderMedicineList.push(msg.sender)-1;
+        patientInfo[msg.sender].waitHandleRequestOrderMedicine.push(addr)-1;
     }
     //
     function permit_access_and_remove_doctor_permit_access(address addr) payable public {
