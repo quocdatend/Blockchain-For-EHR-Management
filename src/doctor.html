@@ -1411,7 +1411,7 @@ ${text}
                         console.log("---recordHash:",recordHash);
                         $.get("http://localhost:8081/ipfs/" + recordHash, function (data) {
                             if(!error) {
-                                updatedRecords = `<div class="recordSign" style="border-bottom:1px solid;">` + updatedRecords + `<span>key patient: ${key}</span>` +  data  + `</div>`;
+                                updatedRecords = `<div class="recordSign" style="border-bottom:1px solid;">` + updatedRecords + `<span>key patient: ${key}</span><p class="checkOrderSuccess" value="No"></p></div>` +  data  ;
                                 console.log("---data:",data);
                                 console.log("123123123123:",updatedRecords);
                                 if (diagnosed !=  "") {
