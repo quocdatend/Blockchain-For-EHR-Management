@@ -47,6 +47,7 @@
                 <li class="nav-item"><a class="nav-link js-scroll-trigger" href="#access">Wait Access</a></li>
                 <li class="nav-item"><a class="nav-link js-scroll-trigger" href="#accessDoctor">Access Doctor</a></li>
                 <li class="nav-item"><a class="nav-link js-scroll-trigger" href="#skills">Access Holders</a></li>
+                <li class="nav-item"><a class="nav-link js-scroll-trigger" href="#orderMedicine">Order Medicine</a></li>
                 <li class="nav-item"><a class="nav-link js-scroll-trigger" href="./index.html">Logout</a></li>
             </ul>
         </div>
@@ -251,7 +252,46 @@
                 </div>
             </div>    
             </section>
+            <!--access Doctor -->
+            <section class="resume-section" id="orderMedicine">
+                            <div class="panel panel-default" width="10">
+                                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-sm-offset-1 col-sm-1000">
+                                        <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="text-white">......................................................................................................</h3>
+                    <h3 class="text-center">Send request to Hospital</h3>
+                </div>
+                <div class="panel-body ">
+                    <div class="row">
+                        <div class="alert alert-info">
+                            <strong>Info!</strong> The healthcare already has access to your records. Revoke access or wait for time duration to end to continue.
+                        </div>
+                    </div>
+
+                    
+                    <form class="form-horizontal" action="/action_page.php">
+                        <div class="form-group "> 
+                            <label for="showListHospital" class="control-label">Hospital:</label>
+                                <select class="form-control" id="showListHospital">
+                                    <option selected disabled>-- Please Select--</option>
+                                </select>
+                        </div>
+                    </form>
+                    <div class="text-center">
+                        <button onclick = "sendRequestOrderMedicine()" class="btn btn-primary btn-lg">Submit</button>
+                    </div>
+                </div>
+            </div>
+                        
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
             
+        </section>
            
         </div>
       <script src="js/jquery.js"></script>
@@ -400,8 +440,47 @@
             else
                 console.error(error);
         });
+        contractInstance.get_hospital_list.call({
+                gas: 1000000
+            }, function(error, result) {
+                if (!error) {
+                    hospitalAddrList = result;
+                    for (var i = 0; i < hospitalAddrList.length; i++) {
+                        contractInstance.get_hospital.call(hospitalAddrList[i], {
+                            gas: 1000000
+                        }, function(error, result) {
+                            var list = document.getElementById("showListHospital");
+                            if (!error) {
+                                [a, b, c, d, e] = result;
+                                var option = document.createElement("option");
+                                option.text = a + " :" + b;
+                                list.add(option);
+                            } else console.log(error);
+                        });
+                    }
+                } else console.log(error);
+            });
 
     });
+    function sendRequestOrderMedicine() {
+        var hospital = document.getElementById("showListHospital");
+        var index = hospital.selectedIndex;
+        var hospitalList;
+        contractInstance.get_hospital_list.call({
+                gas: 1000000
+            }, function(error, result) {
+                if (!error) {
+                    hospitalList = result;
+                    contractInstance.request_ordor_medicine.sendTransaction(hospitalList[index-1], { from: key, gas: 1000000, value: web3.toWei(2, 'ether') },  function(error) {
+                        if (!error)  {
+                            console.log("Request Order Medicine Success");
+                        }
+                        else console.log(error);
+                    });
+                } else console.log(error);
+            });
+    }
+
     function showRecords(element) {
         if (toggleRecordsButton % 2 == 0) {
             $.get("http://localhost:8081/ipfs/" + recordHash, function (data) {
