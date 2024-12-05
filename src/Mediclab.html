@@ -76,6 +76,7 @@
                     <li class="nav-item"><a class="nav-link js-scroll-trigger" href="#experience">Pending Request</a></li>
                     <li class="nav-item"><a class="nav-link js-scroll-trigger" href="#employeees">Employeees</a></li>
                     <li class="nav-item"><a class="nav-link js-scroll-trigger" href="#medicines">Medicines</a></li>
+                    <li class="nav-item"><a class="nav-link js-scroll-trigger" href="#showmedicines">Show Medicines</a></li>
                     <li class="nav-item"><a class="nav-link js-scroll-trigger" href="./index.html">Logout</a></li>
                 </ul>
             </div>
@@ -220,7 +221,7 @@
                     <h3 class="text-white">
                         ......................................................................................................
                     </h3>
-                    <h3 class="text-center">Show all employee</h3>
+                    <h3 class="text-center" >Show all employee</h3>
 
                 </div>
                 <div class="panel-body">
@@ -265,19 +266,51 @@
                     </div>
                     <div class="row">
                         <div class="col-sm-offset-1 col-sm-10">
-                            <form id="medicine-form" action="/submit" >
+                            <form id="medicine-form" >
                                 <div id="form-rows">
                                     <div class="form-group child-medicine">
-                                        <input type="text" name="medicineCode[]" placeholder="Mã Thuốc" required>
-                                        <input type="text" name="medicineName[]" placeholder="Tên Thuốc" required>
-                                        <input type="number" name="quantity[]" placeholder="Số Lượng" min="1" required>
-                                        <input type="number" name="price[]" placeholder="Giá Tiền (VNĐ)" min="0" step="1000" required>
+                                        <input type="text" class="medicineCode"  placeholder="Mã Thuốc" required>
+                                        <input type="text" class="medicineName"  placeholder="Tên Thuốc" required>
+                                        <input type="number" class="quantity"  placeholder="Số Lượng" min="1" required>
+                                        <input type="number" class="price"  placeholder="Giá Tiền (VNĐ)" min="0" step="1000" required>
                                         <button type="button" class="remove-button btn btn-danger">Xóa</button>
                                     </div>
                                 </div>
-                                <button type="button" class="add-button" id="add-row-button">Thêm Hàng</button>
-                                <button type="submit" class="submit-button" onclick="saveMedicines()">Lưu Thuốc</button>
+                                <div style="text-align: center;">
+
+                                    <button type="button" class="add-button" id="add-row-button">Thêm Hàng</button>
+                                    <button type="button" class="btn btn-info" style="width:200px;color:white;text-align: center;margin-top: 12px;" onclick="saveMedicines()">Lưu Thuốc</button>
+                                </div>
                             </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </section>
+        <hr class="m-0" />
+        <section class="resume-section" id="showmedicines">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="text-white">
+                        ......................................................................................................
+                    </h3>
+                    <h3 class="text-center">Show All Medicines</h3>
+
+                </div>
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="alert alert-danger">
+                            <strong>Notice!</strong> Could not access records. Access might have been revoked. Contact
+                            admin or patient.
+                        </div>
+                    </div>
+                    <div class="row" style="text-align: center;margin-left: 12%;">
+                        <div class="col-sm-offset-1 col-sm-10">
+                             <div id="show-medicines" style="text-align: left;">
+
+                             </div>
+                             <button class="btn btn-info" onclick="showAllMedicine()">View</button>
                         </div>
                     </div>
                 </div>
@@ -443,10 +476,10 @@
             const newRow = document.createElement('div');
             newRow.className = 'form-group child-medicine';
             newRow.innerHTML = `
-                <input type="text" name="medicineCode[]" placeholder="Mã Thuốc" required>
-                <input type="text" name="medicineName[]" placeholder="Tên Thuốc" required>
-                <input type="number" name="quantity[]" placeholder="Số Lượng" min="1" required>
-                <input type="number" name="price[]" placeholder="Giá Tiền (VNĐ)" min="0" step="1000" required>
+                <input type="text" class="medicineCode" placeholder="Mã Thuốc" required>
+                <input type="text" class="medicineName" placeholder="Tên Thuốc" required>
+                <input type="number" class="quantity" placeholder="Số Lượng" min="1" required>
+                <input type="number" class="price" placeholder="Giá Tiền (VNĐ)" min="0" step="1000" required>
                 <button type="btn button" class="remove-button btn btn-danger">Xóa</button>
             `;
             formRows.appendChild(newRow);
@@ -473,8 +506,122 @@
         });
     }
 
+    function showAllMedicine() {
+        var element = document.getElementById("show-medicines");
+        contractInstance.get_hospital.call(key, {gas:1000000}, function(error, result) {
+            if(!error) {
+                var hashMedicine = result[3];
+                $.get("http://localhost:8081/ipfs/" + hashMedicine, function (data) {
+                    var parser = new DOMParser();
+                    var doc = parser.parseFromString(data, "text/html");
+                    var countRow = doc.getElementsByClassName("medicineCode");
+                    var text = "";
+                    for (let i = 0; i < countRow.length; i++) {
+                        var medicineCode = doc.getElementsByClassName("medicineCode")[i].textContent;
+                        var medicineName = doc.getElementsByClassName("medicineName")[i].textContent;
+                        var quantity = doc.getElementsByClassName("quantity")[i].textContent;
+                        var price = doc.getElementsByClassName("price")[i].textContent;
+                        text = text + `<h5>Product ${i+1}</h5>
+    <form style="margin-left:15px;">
+        <div class="form-group">
+            <label for="code">Code:</label>${medicineCode}
+        </div>
+        <div class="form-group">
+            <label for="name">Name:</label>${medicineName}
+        </div>
+        <div class="form-group">
+            <label for="quantity">Quantity:</label>${quantity}
+        </div>
+        <div class="form-group">
+            <label for="price">Price:</label>${price}
+        </div>
+    </form>`;
+                    }
+                    element.innerHTML = text;
+                })
+            } else console.log(error);
+        })
+    }
+
+    var newRecordMedicines = "";
     function saveMedicines() {
-        var form = document.getElementById("form-medicines");
+        newRecordMedicines="";
+        var form = document.getElementsByClassName("child-medicine");
+        contractInstance.get_hospital.call(key, {gas:1000000}, function(error, result) {
+            if(!error) {
+                var medicine = result[3];
+                if(medicine != "") { 
+                    $.get("http://localhost:8081/ipfs/" + medicine, function (data) {
+                        var parser = new DOMParser();
+                        var doc = parser.parseFromString(data, "text/html");
+                        var countMedicine = doc.getElementsByClassName("childMedicine");
+                        for (let i = 0; i < form.length; i++) {
+                            var medicineCode = form[i].getElementsByClassName("medicineCode")[0].value;
+                            var medicineName = form[i].getElementsByClassName("medicineName")[0].value;
+                            var quantity = form[i].getElementsByClassName("quantity")[0].value;
+                            var price = form[i].getElementsByClassName("price")[0].value;
+                            console.log(medicineCode,medicineName,quantity,price);
+                            if((medicineCode != "") && (medicineName != "") && (quantity != "") && (price != "")) {
+                                console.log(321);
+                                for (let j = 0; j < countMedicine.length; j++) {
+                                    var text = countMedicine[j];
+                                    if((medicineCode == text.getElementsByClassName("medicineCode")[0].textContent) && (medicineName == text.getElementsByClassName("medicineName")[0].textContent)) {
+                                        console.log(123123);
+                                        newRecordMedicines = newRecordMedicines + `</br><span class="medicineCode" >${text.getElementsByClassName("medicineCode")[0].textContent}</span>
+    <span class="medicineName" >${text.getElementsByClassName("medicineName")[0].textContent}</span>
+    <span class="quantity" >${parseInt(quantity)+parseInt(text.getElementsByClassName("quantity")[0].textContent)}</span>
+    <span class="price" >${price}</span>`;
+                                    } else {
+                                        newRecordMedicines = newRecordMedicines + `</br><span class="medicineCode">${medicineCode}</span>
+    <span class="medicineName">${medicineName}</span>
+    <span class="quantity">${quantity}</span>
+    <span class="price">${price}</span>`;
+                                    }
+                                }
+                            }
+                        }
+                        var buffer = Buffer(newRecordMedicines);
+                        ipfs.files.add(buffer, (error, result) => {
+                            var ipfshash;
+                            if (!error) {
+                                ipfshash = result[0].hash;
+                                contractInstance.add_store_medicine.sendTransaction(ipfshash, {from: key, gas:1000000 , value: web3.toWei(2, 'ether')}, function(error) {
+                                    if(!error) {
+                                        console.log("Medicine added successfully");
+                                    } else console.log(error);
+                                });
+                            } else console.log(error);
+                        })
+                    })
+                } else {
+                    for (let i = 0; i < form.length; i++) { 
+                        console.log(123);
+                        var medicineCode = form[i].getElementsByClassName("medicineCode")[0].value;
+                        var medicineName = form[i].getElementsByClassName("medicineName")[0].value;
+                        var quantity = form[i].getElementsByClassName("quantity")[0].value;
+                        var price = form[i].getElementsByClassName("price")[0].value;
+                        if((medicineCode != "") && (medicineName != "") && (quantity != "") && (price != "")) {
+                            newRecordMedicines  = newRecordMedicines + `</br><div class="childMedicine"><span class="medicineCode" >${medicineCode}</span>
+<span class="medicineName" >${medicineName}</span>
+<span class="quantity">${quantity}</span>
+<span class="price" >${price}</span></div>`;
+                        }
+                    }
+                    var buffer = Buffer(newRecordMedicines);
+                    ipfs.files.add(buffer, (error, result) => {
+                        var ipfshash;
+                        if (!error) {
+                            ipfshash = result[0].hash;
+                            contractInstance.add_store_medicine.sendTransaction(ipfshash, {from: key, gas:1000000 , value: web3.toWei(2, 'ether')}, function(error) {
+                                if(!error) {
+                                    console.log("Medicine added successfully");
+                                } else console.log(error);
+                            });
+                        } else console.log(error);
+                    })
+                }
+            } else console.log(error);
+        })
         
     }
         
