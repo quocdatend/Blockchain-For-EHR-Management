@@ -29,15 +29,8 @@ contract Medishield {
         address[] doctorAccessList; // hospital
         address[] accessJob; // doctor
         address[] patientOrderMedicineList; //  hospital
-        string medincines; // hospital
+        string medicines; // hospital
     }
-
-    // struct medicine{
-    //     // string typeDisease; // loai benh
-    //     // uint quantity;      // Số lượng
-    //     string[] listMedicine;
-    //     address[] doctor;             // chu ky
-    // }
 
     uint creditPool;
     address[] public patientList;
@@ -50,8 +43,6 @@ contract Medishield {
     mapping (address => healthcare) healthcareInfo;
     //new
     mapping (address => healthcare) hospitalInfo;
-    // mapping (address => medicine) medicineInfo;
-    //mapping (address => records) writeRecord;
     //
     mapping (address => address) Empty;
     mapping (address => string) patientRecords;
@@ -64,12 +55,6 @@ contract Medishield {
             p.name = _name;
             p.number = _number;
             p.record = _hash;
-            // Records memory a;
-            // p.records = a;
-            // medicine memory a;
-            // a.typeDisease = "";
-            // a.quantity = 0;
-            // medicineInfo[msg.sender] = a;
             patientInfo[msg.sender] = p;
             patientList.push(addr)-1;
             return _name;
@@ -89,7 +74,7 @@ contract Medishield {
             d.name = _name;
             d.number = _number;
             d.designation = _designation;
-            //d.medincines = _hash;
+            d.medicines = _hash;
             hospitalInfo[msg.sender] = d;
             hospitalList.push(addr)-1;
             return _name;
@@ -107,8 +92,8 @@ contract Medishield {
     function get_healthcare(address addr) view public returns (string memory , uint, uint256){
         return (healthcareInfo[addr].name, healthcareInfo[addr].number, healthcareInfo[addr].designation);
     }
-    function get_hospital(address addr) view public returns (string memory , uint, uint256){
-        return (hospitalInfo[addr].name, hospitalInfo[addr].number, hospitalInfo[addr].designation);
+    function get_hospital(address addr) view public returns (string memory , uint, uint256, string memory){
+        return (hospitalInfo[addr].name, hospitalInfo[addr].number, hospitalInfo[addr].designation, hospitalInfo[addr].medicines);
     }
     function get_patient_healthcare_name(address paddr, address daddr) view public returns (string memory , string memory ){
         return (patientInfo[paddr].name,healthcareInfo[daddr].name);
@@ -157,6 +142,11 @@ contract Medishield {
         creditPool += 2;
         hospitalInfo[addr].patientOrderMedicineList.push(msg.sender)-1;
         patientInfo[msg.sender].waitHandleRequestOrderMedicine.push(addr)-1;
+    }
+    function add_store_medicine(string memory _hash) payable public {
+        require(msg.value == 2 ether);
+        creditPool += 2;
+        hospitalInfo[msg.sender].medicines = _hash;
     }
     //
     function permit_access_and_remove_doctor_permit_access(address addr) payable public {
@@ -302,7 +292,7 @@ contract Medishield {
     // function get_medicine_by_patient(address addr) public view returns (string[] memory){
     //     return patientInfo[addr].listMedicine;
     // }
-    function get_doctor_in_medicine(address  addr) public view   returns (address[] memory) {
+    function get_doctor_in_medicine(address addr) public view  returns (address[] memory) {
         return patientInfo[addr].doctorSigns;
     }
     //
