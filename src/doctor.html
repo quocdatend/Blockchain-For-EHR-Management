@@ -600,30 +600,6 @@
                 } else
                     console.error(error);
             });
-            // print out the healthcares to share emr
-            // var healthcareList = 0;
-            // console.log("Getting healthcare List");
-            // contractInstance.get_patient_list({gas: 1000000},function(error, result){
-            //     if(!error) {
-            //         healthcareList = result;
-            //         for(var i = 0; i < healthcareList.length; i++) {
-            //             contractInstance.get_patient.call(healthcareList[i], {gas: 1000000},function(error, result){
-            //                 var list = document.getElementById("permithealthcareList");
-            //                 if(!error) {
-            //                     [a, b, c, d, e] = result; 
-            //                     var option = document.createElement("option");
-            //                     option.text = a+" :"+b ;
-            //                     list.add(option);
-            //                     console.log(result);
-            //                 }
-            //                 else
-            //                     console.error(error);
-            //             })
-            //         }
-            //     } 
-            //     else
-            //         console.error(error);
-            // });
             contractInstance.get_accessed_patientlist_for_healthcare(key, {
                 gas: 1000000
             }, function(error, result) {
@@ -968,58 +944,7 @@
                     })
                 }
             })
-            // contractInstance.permit_access.sendTransaction(healthcareToBeAdded, {from: key, gas: 1000000, value: web3.toWei(2, 'ether')}, function(error){
-            //     if (!error) {
-            //         var table = document.getElementById("accessDoc");
-            //         noRows = table.rows.length;
-            //         var row = table.insertRow(noRows);
-            //         var cell1 = row.insertCell(0);
-            //         var cell2 = row.insertCell(1);
-            //         var cell3 = row.insertCell(2);
-            //         cell2.className = "publicKeyhealthcare";
-            //         cell1.innerHTML = $("#permithealthcareList").val();
-            //         cell2.innerHTML = healthcareToBeAdded;
-            //         cell3.innerHTML = '<button onclick="revokeAccess(this)" class="btn btn-danger">Revoke access</button>';
-            //     } else {
-            //         $(".alert-info").show();
-            //         console.log(error);
-            //     }
-            // })
-            //     } else
-            //         console.log(error);
-            // })
         })
-        // Cần sử ký sự kiên tại đây
-        // function giveAccess() {
-        //     var list = document.getElementById("permithealthcareList");
-        //     index = list.selectedIndex;
-        //     var healthcareList = 0;
-        //     contractInstance.get_patient_list({gas: 1000000}, function(error, result){
-        //         if(!error) {
-        //             // console.log(index);
-        //             healthcareList = result;
-        //             healthcareToBeAdded = healthcareList[index-1];
-        //             contractInstance.permit_access.sendTransaction(healthcareToBeAdded, {from: key, gas: 1000000, value: web3.toWei(2, 'ether')}, function(error){
-        //                 if (!error) {
-        //                     var table = document.getElementById("accessDoc");
-        //                     noRows = table.rows.length;
-        //                     var row = table.insertRow(noRows);
-        //                     var cell1 = row.insertCell(0);
-        //                     var cell2 = row.insertCell(1);
-        //                     var cell3 = row.insertCell(2);
-        //                     cell2.className = "publicKeyhealthcare";
-        //                     cell1.innerHTML = $("#permithealthcareList").val();
-        //                     cell2.innerHTML = healthcareToBeAdded;
-        //                     cell3.innerHTML = '<button onclick="revokeAccess(this)" class="btn btn-danger">Revoke access</button>';
-        //                 } else {
-        //                     $(".alert-info").show();
-        //                     console.log(error);
-        //                 }
-        //             })
-        //         } else
-        //             console.log(error);
-        //     })
-        // }
         function abc(upload) {
             const ipfs = window.IpfsHttpClient({
                 host: 'localhost', // Địa chỉ node IPFS của bạn
@@ -1198,104 +1123,6 @@ ${text}
                 alert("Select a diagnosis");
             }
         }
-
-//         function submitDiagnosisForRecord(element, index) {
-//             var table = document.getElementById("showAdress");
-//             var patientAddress = table.textContent;
-//             var diagnosis = $("#ailmentsList1" + patientAddress).val();
-//             diagnosis = parseInt(diagnosis);
-//             console.log("diagnosis", diagnosis);
-//             var diagnosed = ailmentsDict[diagnosis];
-//             var comments = document.getElementById("details1").value;
-//             //var app = document.getElementById("link").innerHTML;  
-//             var app = document.getElementById("link1").innerHTML;
-//             //var url4="https://cloudflare-ipfs.com/ipfs/QmWqhvjor8YtepnN5c57pkAZeXyFMtDHFub8ML6eRUU2zA"
-//             //document.getElementById("link").src=url4;
-//             var jbl = document.getElementById("link21").src;
-//             if (!isNaN(jbl)) {
-//                 var app = document.getElementById("link1").src
-//             }
-//             var oldRecords = $("#records1" + patientAddress).html();
-//             var text;
-
-//             if (!app.includes('https')) {
-//                 text = `<button class="btn btn-info">Không có ảnh</button>`
-//             } else {
-//                 const imgId = `img_${Math.random().toString(36).substr(2, 9)}`;
-//                 text = `<button onclick="toggleImage('${imgId}')" class="btn btn-info">Hiển thị Ảnh</button>
-// <img id="${imgId}" src="${app}" style="display:none; width:70%; height:auto;" />`;
-//             }
-
-//             var newRecords =
-//                 `<div style="border-bottom:1px solid;">
-// <span style="font-weight:bold">Diagnosed By</span>   : ${docName}
-// <span style="font-weight:bold">Diagnosis Time</span> : ${getDateTime()}
-// <span style="font-weight:bold">Diagnosis</span>      : ${diagnosed}
-// <span style="font-weight:bold">Comments</span>       : ${comments}
-// </br>
-// ${text}
-// </div>
-// `
-//             var updatedRecords = newRecords + oldRecords;
-
-//             console.log(updatedRecords);
-
-//             if (!isNaN(diagnosis)) {
-//                 var buffer = Buffer(updatedRecords);
-//                 ipfs.files.add(buffer, (error, result) => {
-//                     if (error) {
-//                         console.log(error)
-//                     } else {
-//                         // key = web3.currentProvider.selectedAddress;
-//                         // key = key.toLocaleLowerCase();
-//                         // contractInstance.permit_access.sendTransaction(key, { from: patientAddress, gas: 1000000, value: web3.toWei(2, 'ether') }, function (error) {
-//                         //     if (!error) {
-//                         //         console.log("patientAddress : ", patientAddress);
-//                         //         console.log("key : ", key);
-//                         //         console.log("Contract successfull");
-//                         //     } else {
-//                         //         $(".alert-info").show();
-//                         //         console.log(error);
-//                         //     }
-//                         // })
-//                         ipfshash = result[0].hash;
-//                         // contractInstance.submitfile(patientAddress, diagnosis, ipfshash, { gas: 1000000 }, function (error, result) {
-//                         //     if (!error) {
-//                         //         alert("Diagnosis has been submitted.");
-//                         //         // delete content row
-//                         //         //table.deleteRow(index + 1);
-//                         //         // delete main row of corresponding content row
-//                         //         //table.deleteRow(index);
-//                         //     } else {
-//                         //         $(".alert-danger1").show();
-//                         //         console.log(error);
-//                         //     }
-//                         // })
-//                         contractInstance.permit_access_and_submitfile.sendTransaction(key, patientAddress,
-//                             diagnosis, ipfshash, {
-//                                 from: patientAddress,
-//                                 gas: 1000000,
-//                                 value: web3.toWei(2, 'ether')
-//                             },
-//                             function(error, result) {
-//                                 if (!error) {
-//                                     alert("Diagnosis has been submitted.");
-//                                     // delete content row
-//                                     //table.deleteRow(index + 1);
-//                                     // delete main row of corresponding content row
-//                                     //table.deleteRow(index);
-//                                 } else {
-//                                     $(".alert-danger1").show();
-//                                     console.log(error);
-//                                 }
-//                             })
-//                     }
-//                 });
-//             } else {
-//                 alert("Select a diagnosis");
-//             }
-//         }
-        // Hàm để thêm thuốc mới vào danh sách thuốc
         function addMedication() {
             // Lấy danh sách thuốc
             var medicationList = document.getElementById('medication-list');
@@ -1384,23 +1211,20 @@ ${text}
 </br>
 ${text}
 </div>
-`           ;
-            
-            //var medicines = document.getElementById("medication-list");
+`;
             var updatedRecords  =  newRecords;
-             // + oldRecords;
             var hTMLCollection =  document.getElementsByClassName("medication-item");
             for (let i = 0; i < hTMLCollection.length; i++) {
                 var newMedicine = "";
                 if(!document.getElementById("medicationName"+(i+1)).value == "")
                     newMedicine = `<h3>Drug ${i+1}</h3>
 <div class="form-row">
-<span id="medicationName${i+1}" value="${document.getElementById("medicationName" + (i+1)).value}"></span>   
-<span id="quantity${i+1}" value="${document.getElementById("quantity" + (i+1)).value}"></span>
-<span id="day${i+1}" value="${document.getElementById("day" + (i+1)).value}"></span>
-<span id="evening${i+1}" value="${document.getElementById("evening" + (i+1)).value}"></span>
-<span id="afternoon${i+1}" value="${document.getElementById("afternoon" + (i+1)).value}"></span>
-<span id="night${i+1}" value="${document.getElementById("night" + (i+1)).value}"></span>
+        Name:<span id="medicationName${i+1}" >${document.getElementById("medicationName" + (i+1)).value}</span>   
+    Quantity: <span id="quantity${i+1}" >${document.getElementById("quantity" + (i+1)).value}</span>
+Day Quantity: <span id="day${i+1}" >${document.getElementById("day" + (i+1)).value}</span>
+     Evening: <span id="evening${i+1}" >${document.getElementById("evening" + (i+1)).value}</span>
+   Afternoon:<span id="afternoon${i+1}" >${document.getElementById("afternoon" + (i+1)).value}</span>
+       Night: <span id="night${i+1}" >${document.getElementById("night" + (i+1)).value}</span>
 </div>`
                     updatedRecords = updatedRecords + "</br>" + newMedicine;
             }
@@ -1420,50 +1244,8 @@ ${text}
                                     if (error) {
                                         console.log(error)
                                     } else {
-                                        // key = web3.currentProvider.selectedAddress;
-                                        // key = key.toLocaleLowerCase();
-                                        // contractInstance.permit_access.sendTransaction(key, { from: patientAddress, gas: 1000000, value: web3.toWei(2, 'ether') }, function (error) {
-                                        //     if (!error) {
-                                        //         console.log("patientAddress : ", patientAddress);
-                                        //         console.log("key : ", key);
-                                        //         console.log("Contract successfull");
-                                        //     } else {
-                                        //         $(".alert-info").show();
-                                        //         console.log(error);
-                                        //     }
-                                        // })
                                         ipfshash = result[0].hash;
                                         console.log(ipfshash,  ":" , result);
-                                        // contractInstance.submitfile(patientAddress, diagnosis, ipfshash, { gas: 1000000 }, function (error, result) {
-                                        //     if (!error) {
-                                        //         alert("Diagnosis has been submitted.");
-                                        //         // delete content row
-                                        //         //table.deleteRow(index + 1);
-                                        //         // delete main row of corresponding content row
-                                        //         //table.deleteRow(index);
-                                        //     } else {
-                                        //         $(".alert-danger1").show();
-                                        //         console.log(error);
-                                        //     }
-                                        // })
-                                        // contractInstance.permit_access_and_submitfile.sendTransaction(key, patientAddress,
-                                        //     diagnosis, ipfshash, {
-                                        //         from: patientAddress,
-                                        //         gas: 1000000,
-                                        //         value: web3.toWei(2, 'ether')
-                                        //     },
-                                        //     function(error, result) {
-                                        //         if (!error) {
-                                        //             alert("Diagnosis has been submitted.");
-                                        //             // delete content row
-                                        //             //table.deleteRow(index + 1);
-                                        //             // delete main row of corresponding content row
-                                        //             //table.deleteRow(index);
-                                        //         } else {
-                                        //             $(".alert-danger1").show();
-                                        //             console.log(error);
-                                        //         }
-                                        //     })
                                         contractInstance.sign_records.sendTransaction(patientAddress, ipfshash, {
                                             from: key,
                                             gas: 1000000,
@@ -1484,10 +1266,6 @@ ${text}
                     }
                     else console.error(error);
                 });
-            // updatedRecords = `<div class="record">` + updatedRecords + recordHash  + `</div>`;
-            
-            
-            
         }
     </script>
 </body>
