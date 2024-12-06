@@ -148,6 +148,18 @@ contract Medishield {
         creditPool += 2;
         hospitalInfo[msg.sender].medicines = _hash;
     }
+    function remove_order_request(address addr) payable public{
+        require(msg.value == 2 ether);
+        creditPool -=1;
+        remove_element_in_array(patientInfo[addr].waitHandleRequestOrderMedicine, msg.sender);
+        remove_element_in_array( hospitalInfo[msg.sender].patientOrderMedicineList, addr);
+        patientInfo[addr].wasDeletedRequestOrderMedicine.push(msg.sender)-1;
+    }
+    function remove_status_order_request(address addr) payable public{
+        require(msg.value == 2 ether);
+        creditPool -=1;
+        remove_element_in_array(patientInfo[msg.sender].wasDeletedRequestOrderMedicine, addr);
+    }
     //
     function permit_access_and_remove_doctor_permit_access(address addr) payable public {
         require(msg.value == 2 ether);
@@ -289,11 +301,28 @@ contract Medishield {
         remove_element_in_array(hospitalInfo[msg.sender].doctorAccessList, addr);
         remove_element_in_array(healthcareInfo[addr].accessJob, msg.sender);
     }
-    // function get_medicine_by_patient(address addr) public view returns (string[] memory){
-    //     return patientInfo[addr].listMedicine;
-    // }
     function get_doctor_in_medicine(address addr) public view  returns (address[] memory) {
         return patientInfo[addr].doctorSigns;
+    }
+    function get_patient_order_medicine(address addr) public view returns(address[] memory) {
+        address[] storage patientAddr =  hospitalInfo[addr].patientOrderMedicineList;
+        return patientAddr;
+    }
+    function get_wait_handle_request_order_medicine(address addr) public view returns(address[] memory) {
+        address[] storage hospitalAddr =  patientInfo[addr].waitHandleRequestOrderMedicine;
+        return hospitalAddr;
+    }
+    function get_wait_payment_request_order_medicine(address addr) public view returns(address[] memory) {
+        address[] storage hospitalAddr =  patientInfo[addr].waitPaymentRequestOrderMedicine;
+        return hospitalAddr;
+    }
+    function get_was_deleted_request_order_medicine(address addr) public view returns(address[] memory) {
+        address[] storage hospitalAddr =  patientInfo[addr].wasDeletedRequestOrderMedicine;
+        return hospitalAddr;
+    }
+    function get_success_request_order_medicine(address addr) public view returns(address[] memory) {
+        address[] storage hospitalAddr =  patientInfo[addr].successRequestOrderMedicine;
+        return hospitalAddr;
     }
     //
     function revoke_access(address daddr) public payable{
@@ -329,6 +358,5 @@ contract Medishield {
     //     hospitalInfo[paddr].medincines = _hash;
     // }
     //
-
 }
 

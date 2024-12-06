@@ -380,6 +380,36 @@
             else
                 console.error(error);
         });
+
+        contractInstance.get_patient_order_medicine(key, {gas:1000000}, function(error, result) {
+            if(!error)  {
+                patientAddressList = result;
+                console.log(result);
+
+                patientAddressList.forEach(function(patientAddress, index){
+                    contractInstance.get_patient.call(patientAddress, {gas: 1000000}, function(error, result){
+                        var table = document.getElementById("viewPatientOrder");
+                        if(!error) {
+                            [a,b] = result;
+                            console.log(a);
+
+                            var row = table.insertRow(index+1);
+                            var cell1 = row.insertCell(0);
+                            var cell2 = row.insertCell(1);
+                            var cell3 = row.insertCell(2);
+                            cell2.className = "publicKeyPatient";
+                            cell1.innerHTML = a;
+                            cell2.innerHTML = patientAddress;
+                            cell3.innerHTML = `<input class="btn btn-success" onclick="accessOrder(this)" id="access-order" type="button" value="Access"></input>
+                            <input class="btn btn-danger" onclick="cancelOrder(this)" id="cancel-order" type="button" value="Cancel" style="margin-top:10px;"></input>`;
+                        }
+                        else
+                            console.error(error);
+                    })
+                })
+            } else console.log(error);
+        })
+
         var patientAddressList = 0;
 
         contractInstance.get_accessed_patientlist_for_healthcare(key, {gas: 1000000}, function(error, result){
@@ -472,29 +502,99 @@
     });
 
     document.getElementById('add-row-button').addEventListener('click', function() {
-            const formRows = document.getElementById('form-rows');
-            const newRow = document.createElement('div');
-            newRow.className = 'form-group child-medicine';
-            newRow.innerHTML = `
-                <input type="text" class="medicineCode" placeholder="Mã Thuốc" required>
-                <input type="text" class="medicineName" placeholder="Tên Thuốc" required>
-                <input type="number" class="quantity" placeholder="Số Lượng" min="1" required>
-                <input type="number" class="price" placeholder="Giá Tiền (VNĐ)" min="0" step="1000" required>
-                <button type="btn button" class="remove-button btn btn-danger">Xóa</button>
-            `;
-            formRows.appendChild(newRow);
-            attachRemoveEvent(newRow.querySelector('.remove-button'));
+        const formRows = document.getElementById('form-rows');
+        const newRow = document.createElement('div');
+        newRow.className = 'form-group child-medicine';
+        newRow.innerHTML = `
+            <input type="text" class="medicineCode" placeholder="Mã Thuốc" required>
+            <input type="text" class="medicineName" placeholder="Tên Thuốc" required>
+            <input type="number" class="quantity" placeholder="Số Lượng" min="1" required>
+            <input type="number" class="price" placeholder="Giá Tiền (VNĐ)" min="0" step="1000" required>
+            <button type="btn button" class="remove-button btn btn-danger">Xóa</button>
+        `;
+        formRows.appendChild(newRow);
+        attachRemoveEvent(newRow.querySelector('.remove-button'));
+    });
+    function attachRemoveEvent(button) {
+        button.addEventListener('click', function() {
+            const row = button.parentElement;
+            row.remove();
         });
-        function attachRemoveEvent(button) {
-            button.addEventListener('click', function() {
-                const row = button.parentElement;
-                row.remove();
-            });
-        }
+    }
 
-        // Attach remove event to the initial row
-        document.querySelectorAll('.remove-button').forEach(attachRemoveEvent);
+    // Attach remove event to the initial row
+    document.querySelectorAll('.remove-button').forEach(attachRemoveEvent);
 
+    function accessOrder(element) {
+        var table = document.getElementById("viewPatientOrder");
+        var index = element.parentNode.parentNode.rowIndex;
+        var patientAddress = table.rows[index].cells[1].innerHTML;
+        contractInstance.get_patient(patientAddress, {gas:1000000}, function(error, result) {
+            if(!error) {
+                var hashRecords = result[4];
+                if(hashRecords=="") {
+                    alert("Patient has no order");
+                    contractInstance.remove_order_request.sendTransaction(patientAddress, {from: key, gas:1000000 , value: web3.toWei(2, 'ether')}, function(error) {
+                        if(!error) {
+                            console.log("Order request removed success!");
+                        } else console.log(error);
+                    })
+                } else {
+                    contractInstance.get_hospital(key, {gas:1000000}, function(error, result) {
+                        if(!error) {
+                            var hashMedicine = result[3];
+                            $.get("http://localhost:8081/ipfs/" + hashMedicine, function (data1) {
+                                $.get("http://localhost:8081/ipfs/" + hashRecords, function (data2) {
+                                    var parser = new DOMParser();
+                                    var medicines = data1;
+                                    var records = data2;
+                                    var doc1 = parser.parseFromString(data1, "text/html");
+                                    var doc2 = parser.parseFromString(data2, "text/html");
+                                    var querydoc2 = doc2.getElementsByClassName("recordSign")[0];
+                                    var count1 = querydoc2.getElementsByClassName("form-row");
+                                    var querydoc1 = doc1.getElementsByClassName("childMedicine");
+                                    var countPrice = querydoc1.length;
+                                    var price = 0;
+                                    for (let i = 0; i < count1.length; i++) {
+                                        var medicationName = count1[i].children[0];
+                                        var quantity = count1[i].children[1];
+                                        var day = count1[i].children[2];
+                                        var evening = count1[i].children[3];
+                                        var afternoon = count1[i].children[4];
+                                        var night = count1[0].children[5];
+                                        for (let j = 0; j < querydoc1.length; j++) {
+                                            var checkName = querydoc1[i].getElementsByClassName("medicineName")[0];
+                                            var code = querydoc1[i].getElementsByClassName("medicineCode")[0];
+                                            var countMedicine = querydoc1[i].getElementsByClassName("quantity")[0];
+                                            var priceMedicine = querydoc1[i].getElementsByClassName("price")[0];
+                                            console.log(medicationName.textContent, checkName.textContent, parseInt(quantity.textContent) <= parseInt(countMedicine.textContent));
+                                            if(medicationName.textContent == checkName.textContent && parseInt(quantity.textContent) <= parseInt(countMedicine.textContent)) {
+                                                countPrice-=1;
+                                                price += parseFloat(parseInt(quantity.textContent)*parseInt(priceMedicine.textContent));
+                                            }
+                                            console.log(countPrice);
+                                        }
+                                    }
+                                    if(countPrice == 0) {
+                                        var random = Math.floor(Math.random() * 90000000) + 10000000;
+                                        alert("Send Payment Success!");
+                                    } else {
+                                        alert("Patient has no enough medicine to fulfill the order");
+                                        // contractInstance.remove_order_request.sendTransaction(patientAddress, {from: key, gas:100000}, function(error) {
+                                        //     if(!error) {
+                                        //         console.log("Order request removed!");
+                                        //     } else console.log(error);
+                                        // })
+                                    }
+                                })
+                            })
+                        } else console.log(error);
+                    })
+                }
+            } else console.log(error);
+        });
+    }
+    
     function quitJob(element) {
         var table = document.getElementById("viewEmployee");
         var index = element.parentNode.parentNode.rowIndex;
@@ -508,7 +608,8 @@
 
     function showAllMedicine() {
         var element = document.getElementById("show-medicines");
-        contractInstance.get_hospital.call(key, {gas:1000000}, function(error, result) {
+        if(element.children.length==0) {
+            contractInstance.get_hospital.call(key, {gas:1000000}, function(error, result) {
             if(!error) {
                 var hashMedicine = result[3];
                 $.get("http://localhost:8081/ipfs/" + hashMedicine, function (data) {
@@ -541,8 +642,22 @@
                 })
             } else console.log(error);
         })
+        } else {
+            element.innerHTML = "";
+        }
+        
     }
-
+    function cancelOrder(element){
+        var table = document.getElementById("viewPatientOrder");
+        var index = element.parentNode.parentNode.rowIndex;
+        var patientAddress = table.rows[index].cells[1].innerHTML;
+        console.log("patientAddress:" , patientAddress);
+        contractInstance.remove_order_request.sendTransaction(patientAddress, {from: key, gas:1000000 , value: web3.toWei(2, 'ether')}, function(error) {
+            if(!error) {
+                console.log("Order request removed success!");
+            } else console.log(error);
+        })
+    }
     var newRecordMedicines = "";
     function saveMedicines() {
         newRecordMedicines="";
@@ -580,18 +695,19 @@
                                 }
                             }
                         }
-                        var buffer = Buffer(newRecordMedicines);
-                        ipfs.files.add(buffer, (error, result) => {
-                            var ipfshash;
-                            if (!error) {
-                                ipfshash = result[0].hash;
-                                contractInstance.add_store_medicine.sendTransaction(ipfshash, {from: key, gas:1000000 , value: web3.toWei(2, 'ether')}, function(error) {
-                                    if(!error) {
-                                        console.log("Medicine added successfully");
-                                    } else console.log(error);
-                                });
-                            } else console.log(error);
-                        })
+                        console.log(newRecordMedicines);
+                        // var buffer = Buffer(newRecordMedicines);
+                        // ipfs.files.add(buffer, (error, result) => {
+                        //     var ipfshash;
+                        //     if (!error) {
+                        //         ipfshash = result[0].hash;
+                        //         contractInstance.add_store_medicine.sendTransaction(ipfshash, {from: key, gas:1000000 , value: web3.toWei(2, 'ether')}, function(error) {
+                        //             if(!error) {
+                        //                 console.log("Medicine added successfully");
+                        //             } else console.log(error);
+                        //         });
+                        //     } else console.log(error);
+                        // })
                     })
                 } else {
                     for (let i = 0; i < form.length; i++) { 
@@ -607,18 +723,18 @@
 <span class="price" >${price}</span></div>`;
                         }
                     }
-                    var buffer = Buffer(newRecordMedicines);
-                    ipfs.files.add(buffer, (error, result) => {
-                        var ipfshash;
-                        if (!error) {
-                            ipfshash = result[0].hash;
-                            contractInstance.add_store_medicine.sendTransaction(ipfshash, {from: key, gas:1000000 , value: web3.toWei(2, 'ether')}, function(error) {
-                                if(!error) {
-                                    console.log("Medicine added successfully");
-                                } else console.log(error);
-                            });
-                        } else console.log(error);
-                    })
+                    // var buffer = Buffer(newRecordMedicines);
+                    // ipfs.files.add(buffer, (error, result) => {
+                    //     var ipfshash;
+                    //     if (!error) {
+                    //         ipfshash = result[0].hash;
+                    //         contractInstance.add_store_medicine.sendTransaction(ipfshash, {from: key, gas:1000000 , value: web3.toWei(2, 'ether')}, function(error) {
+                    //             if(!error) {
+                    //                 console.log("Medicine added successfully");
+                    //             } else console.log(error);
+                    //         });
+                    //     } else console.log(error);
+                    // })
                 }
             } else console.log(error);
         })
