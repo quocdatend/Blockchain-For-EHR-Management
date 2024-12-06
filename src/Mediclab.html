@@ -670,44 +670,66 @@
                         var parser = new DOMParser();
                         var doc = parser.parseFromString(data, "text/html");
                         var countMedicine = doc.getElementsByClassName("childMedicine");
+                        for (let j = 0; j < countMedicine.length; j++) {
+                            var text = countMedicine[j];
+                            var count = 0;
+                            for (let i = 0; i < form.length; i++) {
+                                var medicineCode = form[i].getElementsByClassName("medicineCode")[0].value;
+                                var medicineName = form[i].getElementsByClassName("medicineName")[0].value;
+                                var quantity = form[i].getElementsByClassName("quantity")[0].value;
+                                var price = form[i].getElementsByClassName("price")[0].value;
+                                if((medicineCode == text.getElementsByClassName("medicineCode")[0].textContent) && (medicineName == text.getElementsByClassName("medicineName")[0].textContent)) {
+                                    count++;
+                                }
+                            }
+                            if(count==0) {
+                                newRecordMedicines = newRecordMedicines + `</br><div class="childMedicine"><span class="medicineCode">${text.getElementsByClassName("medicineCode")[0].textContent}</span>
+    <span class="medicineName">${text.getElementsByClassName("medicineName")[0].textContent}</span>
+    <span class="quantity">${text.getElementsByClassName("quantity")[0].textContent}</span>
+    <span class="price">${text.getElementsByClassName("price")[0].textContent}</span></div>`;
+                            }
+                        }
                         for (let i = 0; i < form.length; i++) {
                             var medicineCode = form[i].getElementsByClassName("medicineCode")[0].value;
                             var medicineName = form[i].getElementsByClassName("medicineName")[0].value;
                             var quantity = form[i].getElementsByClassName("quantity")[0].value;
                             var price = form[i].getElementsByClassName("price")[0].value;
-                            console.log(medicineCode,medicineName,quantity,price);
+                            // console.log(medicineCode,medicineName,quantity,price);
                             if((medicineCode != "") && (medicineName != "") && (quantity != "") && (price != "")) {
-                                console.log(321);
+                                // console.log(321);
+                                var count = 0;
                                 for (let j = 0; j < countMedicine.length; j++) {
                                     var text = countMedicine[j];
                                     if((medicineCode == text.getElementsByClassName("medicineCode")[0].textContent) && (medicineName == text.getElementsByClassName("medicineName")[0].textContent)) {
-                                        console.log(123123);
-                                        newRecordMedicines = newRecordMedicines + `</br><span class="medicineCode" >${text.getElementsByClassName("medicineCode")[0].textContent}</span>
+                                        // console.log(123123);
+                                        newRecordMedicines = newRecordMedicines + `</br><div class="childMedicine"><span class="medicineCode" >${text.getElementsByClassName("medicineCode")[0].textContent}</span>
     <span class="medicineName" >${text.getElementsByClassName("medicineName")[0].textContent}</span>
     <span class="quantity" >${parseInt(quantity)+parseInt(text.getElementsByClassName("quantity")[0].textContent)}</span>
-    <span class="price" >${price}</span>`;
-                                    } else {
-                                        newRecordMedicines = newRecordMedicines + `</br><span class="medicineCode">${medicineCode}</span>
+    <span class="price" >${price}</span></div>`;
+                                        count++;
+                                        break;
+                                    }
+                                }
+                                if(count==0) {
+                                    newRecordMedicines = newRecordMedicines + `</br><div class="childMedicine"><span class="medicineCode">${medicineCode}</span>
     <span class="medicineName">${medicineName}</span>
     <span class="quantity">${quantity}</span>
-    <span class="price">${price}</span>`;
-                                    }
+    <span class="price">${price}</span></div>`;
                                 }
                             }
                         }
-                        console.log(newRecordMedicines);
-                        // var buffer = Buffer(newRecordMedicines);
-                        // ipfs.files.add(buffer, (error, result) => {
-                        //     var ipfshash;
-                        //     if (!error) {
-                        //         ipfshash = result[0].hash;
-                        //         contractInstance.add_store_medicine.sendTransaction(ipfshash, {from: key, gas:1000000 , value: web3.toWei(2, 'ether')}, function(error) {
-                        //             if(!error) {
-                        //                 console.log("Medicine added successfully");
-                        //             } else console.log(error);
-                        //         });
-                        //     } else console.log(error);
-                        // })
+                        var buffer = Buffer(newRecordMedicines);
+                        ipfs.files.add(buffer, (error, result) => {
+                            var ipfshash;
+                            if (!error) {
+                                ipfshash = result[0].hash;
+                                contractInstance.add_store_medicine.sendTransaction(ipfshash, {from: key, gas:1000000 , value: web3.toWei(2, 'ether')}, function(error) {
+                                    if(!error) {
+                                        console.log("Medicine added successfully");
+                                    } else console.log(error);
+                                });
+                            } else console.log(error);
+                        })
                     })
                 } else {
                     for (let i = 0; i < form.length; i++) { 
@@ -723,18 +745,18 @@
 <span class="price" >${price}</span></div>`;
                         }
                     }
-                    // var buffer = Buffer(newRecordMedicines);
-                    // ipfs.files.add(buffer, (error, result) => {
-                    //     var ipfshash;
-                    //     if (!error) {
-                    //         ipfshash = result[0].hash;
-                    //         contractInstance.add_store_medicine.sendTransaction(ipfshash, {from: key, gas:1000000 , value: web3.toWei(2, 'ether')}, function(error) {
-                    //             if(!error) {
-                    //                 console.log("Medicine added successfully");
-                    //             } else console.log(error);
-                    //         });
-                    //     } else console.log(error);
-                    // })
+                    var buffer = Buffer(newRecordMedicines);
+                    ipfs.files.add(buffer, (error, result) => {
+                        var ipfshash;
+                        if (!error) {
+                            ipfshash = result[0].hash;
+                            contractInstance.add_store_medicine.sendTransaction(ipfshash, {from: key, gas:1000000 , value: web3.toWei(2, 'ether')}, function(error) {
+                                if(!error) {
+                                    console.log("Medicine added successfully");
+                                } else console.log(error);
+                            });
+                        } else console.log(error);
+                    })
                 }
             } else console.log(error);
         })
