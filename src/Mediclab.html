@@ -546,22 +546,22 @@
                             $.get("http://localhost:8081/ipfs/" + hashMedicine, function (data1) {
                                 $.get("http://localhost:8081/ipfs/" + hashRecords, function (data2) {
                                     var parser = new DOMParser();
-                                    var medicines = data1;
-                                    var records = data2;
                                     var doc1 = parser.parseFromString(data1, "text/html");
                                     var doc2 = parser.parseFromString(data2, "text/html");
+                                    console.log(data2);
                                     var querydoc2 = doc2.getElementsByClassName("recordSign")[0];
-                                    var count1 = querydoc2.getElementsByClassName("form-row");
+                                    var count2 = querydoc2.getElementsByClassName("form-row");
                                     var querydoc1 = doc1.getElementsByClassName("childMedicine");
-                                    var countPrice = querydoc1.length;
+                                    var countPrice = querydoc2.length;
                                     var price = 0;
-                                    for (let i = 0; i < count1.length; i++) {
-                                        var medicationName = count1[i].children[0];
-                                        var quantity = count1[i].children[1];
-                                        var day = count1[i].children[2];
-                                        var evening = count1[i].children[3];
-                                        var afternoon = count1[i].children[4];
-                                        var night = count1[0].children[5];
+                                    var changeData = doc1;
+                                    for (let i = 0; i < count2.length; i++) {
+                                        var medicationName = count2[i].children[0];
+                                        var quantity = count2[i].children[1];
+                                        var day = count2[i].children[2];
+                                        var evening = count2[i].children[3];
+                                        var afternoon = count2[i].children[4];
+                                        var night = count2[0].children[5];
                                         for (let j = 0; j < querydoc1.length; j++) {
                                             var checkName = querydoc1[i].getElementsByClassName("medicineName")[0];
                                             var code = querydoc1[i].getElementsByClassName("medicineCode")[0];
@@ -571,12 +571,30 @@
                                             if(medicationName.textContent == checkName.textContent && parseInt(quantity.textContent) <= parseInt(countMedicine.textContent)) {
                                                 countPrice-=1;
                                                 price += parseFloat(parseInt(quantity.textContent)*parseInt(priceMedicine.textContent));
+                                                changeData.getElementsByClassName("childMedicine")[i].getElementsByClassName("quantity")[0].textContent = parseInt(countMedicine)-parseInt(quantity);
+                                                console.log(changeData.getElementsByClassName("childMedicine")[i].getElementsByClassName("quantity")[0].textContent);
+                                                break;
                                             }
-                                            console.log(countPrice);
                                         }
                                     }
+                                    console.log("text:",changeData);
                                     if(countPrice == 0) {
+                                        // var buffer = Buffer(changeData);
+                                        // ipfs.files.add(buffer, (error, result) => {
+                                        //     var ipfshash;
+                                        //     if (!error) {
+                                        //         ipfshash = result[0].hash;
+                                        //         contractInstance.add_store_medicine.sendTransaction(ipfshash, {from: key, gas:1000000 , value: web3.toWei(2, 'ether')}, function(error) {
+                                        //             if(!error) {
+                                        //                 console.log("Medicine edit successfully");
+                                        //             } else console.log(error);
+                                        //         });
+                                        //     } else console.log(error);
+                                        // })
                                         var random = Math.floor(Math.random() * 90000000) + 10000000;
+                                        // Payment
+
+                                        //
                                         alert("Send Payment Success!");
                                     } else {
                                         alert("Patient has no enough medicine to fulfill the order");
