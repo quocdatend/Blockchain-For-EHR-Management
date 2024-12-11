@@ -30,6 +30,7 @@ contract Medishield {
         address[] accessJob; // doctor
         address[] patientOrderMedicineList; //  hospital
         string medicines; // hospital
+        string specialty; // doctor
     }
 
     uint creditPool;
@@ -159,6 +160,11 @@ contract Medishield {
         require(msg.value == 2 ether);
         creditPool -=1;
         remove_element_in_array(patientInfo[msg.sender].wasDeletedRequestOrderMedicine, addr);
+    }
+    function choice_specialty(string memory _name) payable public {
+        require(msg.value == 2 ether);
+        creditPool += 1;
+        healthcareInfo[msg.sender].specialty = _name;
     }
     //
     function permit_access_and_remove_doctor_permit_access(address addr) payable public {
@@ -324,6 +330,9 @@ contract Medishield {
         address[] storage hospitalAddr =  patientInfo[addr].successRequestOrderMedicine;
         return hospitalAddr;
     }
+    function get_specialty_healthcare(address addr) public view returns(string memory) {
+        return healthcareInfo[addr].specialty;
+    } 
     //
     function revoke_access(address daddr) public payable{
         remove_patient(msg.sender,daddr);

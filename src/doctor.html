@@ -425,6 +425,9 @@
                                     <th>Action</th>
                                 </tr>
                             </table>
+                            <div id="showSpecialty">
+
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -591,7 +594,8 @@
                                 cell1.innerHTML = a;
                                 cell2.innerHTML = hospitalAddress;
                                 cell3.innerHTML =
-                                    `<input class="btn btn-danger" onclick="resignJob(this)" id="${addr}" type="button" value="Resign"></input>`;
+                                    `<input class="btn btn-danger" onclick="resignJob(this)" id="${addr}" type="button" value="Resign"></input>
+                                    <input class="btn btn-info" onclick="choiceSpecialty(this)" type="button" value="Specialty"></input>`;
                                 //cell4.innerHTML = `<input class="btn-outline-primary" type="file"  id="upload" type="button" onclick="abc(upload) placeholder="ho"></input>`;
                             } else
                                 console.error(error);
@@ -659,6 +663,180 @@
                     console.error(error);
             });
         });
+
+        function choiceSpecialty(element) {
+            var table = document.getElementById("viewHospital");
+            var index = element.parentNode.parentNode.rowIndex;
+            var hospitalAddress = table.rows[index].cells[1].innerHTML;
+            var getshowSpecialty = document.getElementById("showSpecialty");
+            if(getshowSpecialty.innerText == "") {
+                getshowSpecialty.innerHTML=`<div class="container">
+        <h4>Chọn Chuyên Khoa</h4>
+        <label for="specialty">Chuyên Khoa:</label>
+        <select id="specialty" onchange="showDepartments()">
+            <option value="" selected disabled>-- Chọn chuyên khoa --</option>
+            <option value="ngoaiKhoa">Ngoại khoa</option>
+            <option value="noiKhoa">Nội khoa</option>
+            <option value="sanPhuKhoa">Sản phụ khoa</option>
+            <option value="chanDoan">Chẩn đoán</option>
+            <option value="cacKhoaKhac">Các khoa khác</option>
+        </select>
+ 
+        <h6>Tên Chuyên Khoa:</h6>
+        <p id="specialtyName">Vui lòng chọn một chuyên khoa.</p>
+ 
+        <h6>Danh Sách Khoa:</h6>
+        <ul id="departmentList" style="list-style-type: none;
+            padding: 0;">
+            <li>Vui lòng chọn một chuyên khoa để xem danh sách các khoa.</li>
+        </ul>
+ 
+        <div class="selected-info" style="{
+            margin-top: 20px;
+            font-size: 18px;
+            color: #555;
+        }">
+            <strong>Khoa đã chọn:</strong> <span id="selectedDepartment">Chưa chọn</span>
+        </div>
+        <buttun class="btn btn-success" onclick="submitchoicespecialty()">Submit</button>
+    </div>`;
+            } else {
+                getshowSpecialty.innerHTML = "";
+            }
+        }
+        const departments = {
+            ngoaiKhoa: [
+            "Ngoại tim mạch",
+            "Ngoại lồng ngực",
+            "Ngoại tiêu hóa",
+            "Phẫu thuật mắt",
+            "Ngoại tổng quát",
+            "Ngoại thần kinh",
+            "Phẫu thuật miệng & hàm mặt",
+            "Ngoại chỉnh hình",
+            "Phẫu thuật bàn tay",
+            "Tai mũi họng",
+            "Ngoại nhi",
+            "Phẫu thuật tạo hình",
+            "Phẫu thuật sinh dục",
+            "Ung bướu ngoại khoa",
+            "Ghép tạng",
+            "Ngoại chấn thương",
+            "Ngoại tiết niệu Nam khoa",
+            "Phẫu thuật mạch máu",
+            ],
+            noiKhoa: [
+            "Dị ứng / Miễn dịch học",
+            "Nội tim mạch",
+            "Nội tiết",
+            "Khoa tiêu hóa",
+            "Lão",
+            "Huyết học",
+            "Bệnh truyền nhiễm",
+            "Nội thận",
+            "Nội ung bướu",
+            "Khoa hô hấp",
+            "Phong thấp",
+            ],
+            sanPhuKhoa: [
+            "Phụ khoa",
+            "Ung bướu phụ khoa",
+            "Thai nhi",
+            "Sản khoa",
+            "Sinh lý nội tiết sinh sản và vô sinh",
+            "Sinh dục",
+            ],
+            chanDoan: [
+                "Khoa X quang",
+                "Khoa xạ trị",
+            ],
+            cacKhoaKhac: [
+            "Addiction medicine",
+            "Adolescent medicine",
+            "Gây mê",
+            "Dermatology",
+            "Disaster medicine",
+            "Diving medicine",
+            "Y học cấp cứu",
+            "Y học gia đình",
+            "Bác sĩ đa khoa",
+            "Hospital medicine",
+            "Y học chăm sóc tích cực",
+            "Di truyền học y khoa",
+            "Thần kinh học",
+            "Occupational medicine",
+            "Nhãn khoa",
+            "Điều trị đau",
+            "Palliative care",
+            "Nhi khoa",
+            "Vật lý trị liệu và phục hồi chức năng",
+            "Y học dự phòng",
+            "Tâm thần khoa",
+            "Ung bướu phóng xạ",
+            "Y học sinh sản",
+            "Sexual medicine",
+            "Y học giấc ngủ",
+            "Y học thể thao",
+            "Y học cấy ghép",
+            "Y học nhiệt đới",
+            ]
+        };
+
+        function showDepartments() {
+            const specialtyDropdown = document.getElementById("specialty");
+            const specialtyValue = specialtyDropdown.value;
+            const specialtyText = specialtyDropdown.options[specialtyDropdown.selectedIndex].text;
+ 
+            const departmentList = document.getElementById("departmentList");
+            const specialtyName = document.getElementById("specialtyName");
+ 
+            // Cập nhật tên chuyên khoa
+            specialtyName.textContent = specialtyText;
+ 
+            // Xóa danh sách hiện tại
+            departmentList.innerHTML = "";
+ 
+            // Nếu chưa chọn chuyên khoa, hiển thị thông báo
+            if (!specialtyValue || !departments[specialtyValue]) {
+                departmentList.innerHTML = "<li>Vui lòng chọn một chuyên khoa để xem danh sách các khoa.</li>";
+                return;
+            }
+ 
+            // Tạo danh sách các khoa
+            departments[specialtyValue].forEach(department => {
+                const li = document.createElement("li");
+                li.textContent = department;
+                li.style = `background-color: #f9f9f9;
+            margin: 5px 0;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;`;
+                li.onclick = () => selectDepartment(department); // Gắn sự kiện khi click
+                departmentList.appendChild(li);
+            });
+        }
+        
+        function submitchoicespecialty() {
+            var getspecialty = document.getElementById("selectedDepartment");
+            contractInstance.choice_specialty.sendTransaction(getspecialty, {
+                from:key,
+                gas: 1000000,
+                value: web3.toWei(2, 'ether')
+            }, function(error) {
+                if(!error) {
+                    alert("Đã gửi yêu cầu");
+                    window.reload();
+                } else console.log(error);
+            })
+        }
+
+        // Hàm xử lý khi chọn một khoa
+        function selectDepartment(department) {
+            const selectedDepartment = document.getElementById("selectedDepartment");
+            selectedDepartment.textContent = department; // Hiển thị tên khoa đã chọn
+        }
 
         function resignJob(element) {
             var table = document.getElementById("viewHospital");
