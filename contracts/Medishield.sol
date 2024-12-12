@@ -31,6 +31,7 @@ contract Medishield {
         address[] patientOrderMedicineList; //  hospital
         string medicines; // hospital
         string specialty; // doctor
+        string workingDays;
     }
 
     uint creditPool;
@@ -166,6 +167,10 @@ contract Medishield {
         creditPool += 1;
         healthcareInfo[msg.sender].specialty = _name;
     }
+    function set_working_days(string memory _hash) payable public {
+        //require(healthcareInfo[msg.sender].designation == 1, "Not a doctor account.");
+        healthcareInfo[msg.sender].workingDays = _hash;
+    }
     //
     function permit_access_and_remove_doctor_permit_access(address addr) payable public {
         require(msg.value == 2 ether);
@@ -206,39 +211,7 @@ contract Medishield {
         }else {
             revert();
         }
-
-        // bool DiagnosisFound = false;
-        // for(uint j = 0; j < patientInfo[paddr].diagnosis.length;j++){
-        //     if(patientInfo[paddr].diagnosis[j] == _diagnosis)DiagnosisFound = true;
-        // }
     }
-
-    //new
-    // function submitfileHospital(address paddr, uint _diagnosis, string memory  _hash) public {
-    //     bool patientFound = false;
-    //     for(uint i = 0;i<healthcareInfo[msg.sender].patientAccessList.length;i++){
-    //         if(healthcareInfo[msg.sender].patientAccessList[i]==paddr){
-    //             msg.sender.transfer(2 ether);
-    //             creditPool -= 2;
-    //             patientFound = true;
-                
-    //         }
-            
-    //     }
-    //     if(patientFound==true){
-    //         set_medincine(paddr, _hash);
-    //         remove_patient(paddr, msg.sender); // fix
-    //     }else {
-    //         revert();
-    //     }
-
-    //     bool DiagnosisFound = false;
-    //     for(uint j = 0; j < patientInfo[paddr].diagnosis.length;j++){
-    //         if(patientInfo[paddr].diagnosis[j] == _diagnosis)DiagnosisFound = true;
-    //     }
-    // }
-    //
-
     function remove_element_in_array(address[] storage Array, address addr) internal returns(uint)
     {
         bool check = false;
@@ -332,7 +305,10 @@ contract Medishield {
     }
     function get_specialty_healthcare(address addr) public view returns(string memory) {
         return healthcareInfo[addr].specialty;
-    } 
+    }
+    function get_working_days(address addr) public view  returns (string memory) {
+         return healthcareInfo[addr].workingDays;
+    }
     //
     function revoke_access(address daddr) public payable{
         remove_patient(msg.sender,daddr);
