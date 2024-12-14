@@ -701,7 +701,7 @@
                                 cell2.className = "publicKeyEmployee1";
                                 cell1.innerHTML = a;
                                 cell2.innerHTML = EmployeeAddress;
-                                cell3.innerHTML = `<input class="btn btn-danger" onclick="chagedayworking(this)" id="${addr}" type="button" value="Fired"></input>`;
+                                cell3.innerHTML = `<input class="btn btn-danger" onclick="chagedayworking(this)" id="${addr}" type="button" value="Chosen"></input>`;
                             }
                             else
                                 console.error(error);
@@ -1260,20 +1260,7 @@ File :
             selectedYear = parseInt(yearSelect.value);
             generateCalendar(selectedYear, selectedMonth);
         });
-        months.forEach((month, index) => {
-            const button = document.createElement('button');
-            button.classList.add('month-button1');
-            button.textContent = month;
-            button.dataset.month = index;
-            if (index === selectedMonth) button.classList.add('active');
-            button.addEventListener('click', () => {
-                document.querySelectorAll('.month-button1').forEach(btn => btn.classList.remove('active'));
-                button.classList.add('active');
-                selectedMonth = index;
-                generateCalendar(selectedYear, selectedMonth);
-            });
-            monthSelector.appendChild(button);
-        });
+
 
         // Generate calendar for a given month
         function generateCalendar(year, month) {
@@ -1314,11 +1301,35 @@ File :
         // Save schedule
 
         function chagedayworking(element) {
-            generateCalendar(selectedYear, selectedMonth);
+
+
             var table = document.getElementById("viewEmployee1");
             var index = element.parentNode.parentNode.rowIndex;
             var patientAddress = table.rows[index].cells[1].innerHTML;
             console.log("patientAddress", patientAddress)
+            contractInstance.get_working_days(patientAddress, { gas: 1000000 }, function (error, result) {
+                if (!error) {
+                    const workingDaysInput = result;
+                    workingDaysInput.split(', ').forEach(date => {
+                        selectedDates[date] = true;
+                    });
+                } else console.log(error);
+            })
+            months.forEach((month, index) => {
+                const button = document.createElement('button');
+                button.classList.add('month-button1');
+                button.textContent = month;
+                button.dataset.month = index;
+                if (index === selectedMonth) button.classList.add('active');
+                button.addEventListener('click', () => {
+                    document.querySelectorAll('.month-button1').forEach(btn => btn.classList.remove('active'));
+                    button.classList.add('active');
+                    selectedMonth = index;
+                    generateCalendar(selectedYear, selectedMonth);
+                });
+                monthSelector.appendChild(button);
+            });
+            generateCalendar(selectedYear, selectedMonth);
             saveButton.addEventListener('click', () => {
                 const workdays = Object.keys(selectedDates).sort();
                 if (workdays.length > 0) {

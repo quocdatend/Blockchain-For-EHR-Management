@@ -343,5 +343,31 @@ contract Medishield {
     //     hospitalInfo[paddr].medincines = _hash;
     // }
     //
+    
+    function is_doctor_working_on_day(address doctor, string memory day) public view returns (bool) {
+        // Lấy ngày làm việc của bác sĩ
+        string memory workingDays = healthcareInfo[doctor].workingDays;
+        // Kiểm tra nếu ngày làm việc của bác sĩ chứa ngày nhập vào
+        bytes memory workingDaysBytes = bytes(workingDays);
+        bytes memory dayBytes = bytes(day);
+        bool isWorking = false;
+        // Duyệt qua chuỗi ngày làm việc để tìm ngày phù hợp
+        for (uint i = 0; i < workingDaysBytes.length - dayBytes.length + 1; i++) {
+            bool matchFound = true;
+            for (uint j = 0; j < dayBytes.length; j++) {
+                if (workingDaysBytes[i + j] != dayBytes[j]) {
+                    matchFound = false;
+                    break;
+                }
+            }
+            if (matchFound) {
+                isWorking = true;
+                break;
+            }
+        }
+        return isWorking;
+    }
+
+    
 }
 

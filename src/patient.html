@@ -35,15 +35,18 @@
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             padding: 20px;
         }
+
         form {
             display: flex;
             flex-direction: column;
             gap: 15px;
         }
+
         label {
             font-size: 16px;
             color: #555;
         }
+
         input[type="date"],
         input[type="text"],
         input[type="submit"] {
@@ -52,21 +55,32 @@
             border-radius: 5px;
             font-size: 16px;
         }
+
         input[type="submit"] {
             background-color: #28a745;
             color: white;
             cursor: pointer;
             transition: background-color 0.3s;
         }
+
         input[type="submit"]:hover {
             background-color: #218838;
         }
+
         #confirmation {
             margin-top: 20px;
             text-align: center;
             font-size: 16px;
             color: #0069d9;
             display: none;
+        }
+
+        .calendar-container {
+            margin-top: 20px;
+            border-top: 1px solid #ccc;
+            padding-top: 20px;
+            display: none;
+            /* Ẩn lịch mặc định */
         }
     </style>
 </head>
@@ -90,7 +104,8 @@
                 <li class="nav-item"><a class="nav-link js-scroll-trigger" href="#access">Wait Access</a></li>
                 <li class="nav-item"><a class="nav-link js-scroll-trigger" href="#accessDoctor">Access Doctor</a></li>
                 <li class="nav-item"><a class="nav-link js-scroll-trigger" href="#skills">Access Holders</a></li>
-                <li class="nav-item"><a class="nav-link js-scroll-trigger" href="#BookAppointment">BookAppointment</a></li>
+                <li class="nav-item"><a class="nav-link js-scroll-trigger" href="#BookAppointment">BookAppointment</a>
+                </li>
                 <li class="nav-item"><a class="nav-link js-scroll-trigger" href="#orderMedicine">Order Medicine</a></li>
                 <li class="nav-item"><a class="nav-link js-scroll-trigger" href="#statusorder">Status Order</a></li>
                 <li class="nav-item"><a class="nav-link js-scroll-trigger" href="./index.html">Logout</a></li>
@@ -298,21 +313,7 @@
             </section>
             <hr class="m-0" />
             <!-- BookAppointment -->
-            <section class="resume-section" id="BookAppointment">
-                <div class="container4">
-                    <h2>Book an Appointment</h2>
-                    <form id="appointment-form">
-                        <label for="appointment-date">Select Appointment Date:</label>
-                        <input type="date" id="appointment-date" name="appointment_date" required>
-                        <p class="note">* Please select an available date for your appointment.</p>
-                        <input type="submit" value="Book Appointment">
-                    </form>
-                    <div id="confirmation">
-                        <h3>Appointment Confirmed!</h3>
-                        <p id="appointment-details"></p>
-                    </div>
-                </div>
-            </section>
+            
             <hr class="m-0" />
             <!--access Doctor -->
             <section class="resume-section" id="orderMedicine">
@@ -400,82 +401,82 @@
     toggleRecordsButton = 0;
     var recordHash = "";
     const departments = {
-            ngoaiKhoa: [
-                "Ngoại tim mạch",
-                "Ngoại lồng ngực",
-                "Ngoại tiêu hóa",
-                "Phẫu thuật mắt",
-                "Ngoại tổng quát",
-                "Ngoại thần kinh",
-                "Phẫu thuật miệng & hàm mặt",
-                "Ngoại chỉnh hình",
-                "Phẫu thuật bàn tay",
-                "Tai mũi họng",
-                "Ngoại nhi",
-                "Phẫu thuật tạo hình",
-                "Phẫu thuật sinh dục",
-                "Ung bướu ngoại khoa",
-                "Ghép tạng",
-                "Ngoại chấn thương",
-                "Ngoại tiết niệu Nam khoa",
-                "Phẫu thuật mạch máu",
-            ],
-            noiKhoa: [
-                "Dị ứng / Miễn dịch học",
-                "Nội tim mạch",
-                "Nội tiết",
-                "Khoa tiêu hóa",
-                "Lão",
-                "Huyết học",
-                "Bệnh truyền nhiễm",
-                "Nội thận",
-                "Nội ung bướu",
-                "Khoa hô hấp",
-                "Phong thấp",
-            ],
-            sanPhuKhoa: [
-                "Phụ khoa",
-                "Ung bướu phụ khoa",
-                "Thai nhi",
-                "Sản khoa",
-                "Sinh lý nội tiết sinh sản và vô sinh",
-                "Sinh dục",
-            ],
-            chanDoan: [
-                "Khoa X quang",
-                "Khoa xạ trị",
-            ],
-            cacKhoaKhac: [
-                "Addiction medicine",
-                "Adolescent medicine",
-                "Gây mê",
-                "Dermatology",
-                "Disaster medicine",
-                "Diving medicine",
-                "Y học cấp cứu",
-                "Y học gia đình",
-                "Bác sĩ đa khoa",
-                "Hospital medicine",
-                "Y học chăm sóc tích cực",
-                "Di truyền học y khoa",
-                "Thần kinh học",
-                "Occupational medicine",
-                "Nhãn khoa",
-                "Điều trị đau",
-                "Palliative care",
-                "Nhi khoa",
-                "Vật lý trị liệu và phục hồi chức năng",
-                "Y học dự phòng",
-                "Tâm thần khoa",
-                "Ung bướu phóng xạ",
-                "Y học sinh sản",
-                "Sexual medicine",
-                "Y học giấc ngủ",
-                "Y học thể thao",
-                "Y học cấy ghép",
-                "Y học nhiệt đới",
-            ]
-        };
+        ngoaiKhoa: [
+            "Ngoại tim mạch",
+            "Ngoại lồng ngực",
+            "Ngoại tiêu hóa",
+            "Phẫu thuật mắt",
+            "Ngoại tổng quát",
+            "Ngoại thần kinh",
+            "Phẫu thuật miệng & hàm mặt",
+            "Ngoại chỉnh hình",
+            "Phẫu thuật bàn tay",
+            "Tai mũi họng",
+            "Ngoại nhi",
+            "Phẫu thuật tạo hình",
+            "Phẫu thuật sinh dục",
+            "Ung bướu ngoại khoa",
+            "Ghép tạng",
+            "Ngoại chấn thương",
+            "Ngoại tiết niệu Nam khoa",
+            "Phẫu thuật mạch máu",
+        ],
+        noiKhoa: [
+            "Dị ứng / Miễn dịch học",
+            "Nội tim mạch",
+            "Nội tiết",
+            "Khoa tiêu hóa",
+            "Lão",
+            "Huyết học",
+            "Bệnh truyền nhiễm",
+            "Nội thận",
+            "Nội ung bướu",
+            "Khoa hô hấp",
+            "Phong thấp",
+        ],
+        sanPhuKhoa: [
+            "Phụ khoa",
+            "Ung bướu phụ khoa",
+            "Thai nhi",
+            "Sản khoa",
+            "Sinh lý nội tiết sinh sản và vô sinh",
+            "Sinh dục",
+        ],
+        chanDoan: [
+            "Khoa X quang",
+            "Khoa xạ trị",
+        ],
+        cacKhoaKhac: [
+            "Addiction medicine",
+            "Adolescent medicine",
+            "Gây mê",
+            "Dermatology",
+            "Disaster medicine",
+            "Diving medicine",
+            "Y học cấp cứu",
+            "Y học gia đình",
+            "Bác sĩ đa khoa",
+            "Hospital medicine",
+            "Y học chăm sóc tích cực",
+            "Di truyền học y khoa",
+            "Thần kinh học",
+            "Occupational medicine",
+            "Nhãn khoa",
+            "Điều trị đau",
+            "Palliative care",
+            "Nhi khoa",
+            "Vật lý trị liệu và phục hồi chức năng",
+            "Y học dự phòng",
+            "Tâm thần khoa",
+            "Ung bướu phóng xạ",
+            "Y học sinh sản",
+            "Sexual medicine",
+            "Y học giấc ngủ",
+            "Y học thể thao",
+            "Y học cấy ghép",
+            "Y học nhiệt đới",
+        ]
+    };
     $(window).load(function () {
         connect();
         $("#records").hide();
@@ -488,19 +489,19 @@
         var b = 0;
         var ailments = [];
 
-        contractInstance.get_wait_handle_request_order_medicine(key, {gas:1000000}, function(error, result) {
-            if(!error) {
+        contractInstance.get_wait_handle_request_order_medicine(key, { gas: 1000000 }, function (error, result) {
+            if (!error) {
                 hospitalAddressList = result;
                 console.log(result);
 
-                hospitalAddressList.forEach(function(hospitalAddress, index){
-                    contractInstance.get_hospital.call(hospitalAddress, {gas: 1000000}, function(error, result){
+                hospitalAddressList.forEach(function (hospitalAddress, index) {
+                    contractInstance.get_hospital.call(hospitalAddress, { gas: 1000000 }, function (error, result) {
                         var table = document.getElementById("status-order");
-                        if(!error) {
-                            [a,b] = result;
+                        if (!error) {
+                            [a, b] = result;
                             console.log(a);
 
-                            var row = table.insertRow(index+1);
+                            var row = table.insertRow(index + 1);
                             var cell1 = row.insertCell(0);
                             var cell2 = row.insertCell(1);
                             var cell3 = row.insertCell(2);
@@ -515,19 +516,19 @@
                 })
             } else console.log(error);
         })
-        contractInstance.get_wait_payment_request_order_medicine(key, {gas:1000000}, function(error, result) {
-            if(!error) {
+        contractInstance.get_wait_payment_request_order_medicine(key, { gas: 1000000 }, function (error, result) {
+            if (!error) {
                 hospitalAddressList = result;
                 console.log(result);
 
-                hospitalAddressList.forEach(function(hospitalAddress, index){
-                    contractInstance.get_hospital.call(hospitalAddress, {gas: 1000000}, function(error, result){
+                hospitalAddressList.forEach(function (hospitalAddress, index) {
+                    contractInstance.get_hospital.call(hospitalAddress, { gas: 1000000 }, function (error, result) {
                         var table = document.getElementById("status-order");
-                        if(!error) {
-                            [a,b] = result;
+                        if (!error) {
+                            [a, b] = result;
                             console.log(a);
 
-                            var row = table.insertRow(index+1);
+                            var row = table.insertRow(index + 1);
                             var cell1 = row.insertCell(0);
                             var cell2 = row.insertCell(1);
                             var cell3 = row.insertCell(2);
@@ -543,19 +544,19 @@
                 })
             } else console.log(error);
         })
-        contractInstance.get_was_deleted_request_order_medicine(key, {gas:1000000}, function(error, result) {
-            if(!error) {
+        contractInstance.get_was_deleted_request_order_medicine(key, { gas: 1000000 }, function (error, result) {
+            if (!error) {
                 hospitalAddressList = result;
                 console.log(result);
 
-                hospitalAddressList.forEach(function(hospitalAddress, index){
-                    contractInstance.get_hospital.call(hospitalAddress, {gas: 1000000}, function(error, result){
+                hospitalAddressList.forEach(function (hospitalAddress, index) {
+                    contractInstance.get_hospital.call(hospitalAddress, { gas: 1000000 }, function (error, result) {
                         var table = document.getElementById("status-order");
-                        if(!error) {
-                            [a,b] = result;
+                        if (!error) {
+                            [a, b] = result;
                             console.log(a);
 
-                            var row = table.insertRow(index+1);
+                            var row = table.insertRow(index + 1);
                             var cell1 = row.insertCell(0);
                             var cell2 = row.insertCell(1);
                             var cell3 = row.insertCell(2);
@@ -570,19 +571,19 @@
                 })
             } else console.log(error);
         })
-        contractInstance.get_success_request_order_medicine(key, {gas:1000000}, function(error, result) {
-            if(!error) {
+        contractInstance.get_success_request_order_medicine(key, { gas: 1000000 }, function (error, result) {
+            if (!error) {
                 hospitalAddressList = result;
                 console.log(result);
 
-                hospitalAddressList.forEach(function(hospitalAddress, index){
-                    contractInstance.get_hospital.call(hospitalAddress, {gas: 1000000}, function(error, result){
+                hospitalAddressList.forEach(function (hospitalAddress, index) {
+                    contractInstance.get_hospital.call(hospitalAddress, { gas: 1000000 }, function (error, result) {
                         var table = document.getElementById("status-order");
-                        if(!error) {
-                            [a,b] = result;
+                        if (!error) {
+                            [a, b] = result;
                             console.log(a);
 
-                            var row = table.insertRow(index+1);
+                            var row = table.insertRow(index + 1);
                             var cell1 = row.insertCell(0);
                             var cell2 = row.insertCell(1);
                             var cell3 = row.insertCell(2);
@@ -668,7 +669,7 @@
                             cell1.innerHTML = a;
                             cell2.innerHTML = healthcareAddress;
                             cell3.innerHTML = '<button onclick="revokeAccess(this)" class="btn btn-danger">RevokeAccess</button>';
-                            
+
                             console.log(result);
                         }
                         else
@@ -713,34 +714,34 @@
                 console.error(error);
         });
         contractInstance.get_hospital_list.call({
-                gas: 1000000
-            }, function(error, result) {
-                if (!error) {
-                    hospitalAddrList = result;
-                    for (var i = 0; i < hospitalAddrList.length; i++) {
-                        contractInstance.get_hospital.call(hospitalAddrList[i], {
-                            gas: 1000000
-                        }, function(error, result) {
-                            var list = document.getElementById("showListHospital");
-                            if (!error) {
-                                [a, b, c, d, e] = result;
-                                var option = document.createElement("option");
-                                option.text = a + " :" + b;
-                                list.add(option);
-                            } else console.log(error);
-                        });
-                    }
-                } else console.log(error);
-            });
-        contractInstance.get_hospital_list.call({
             gas: 1000000
-        }, function(error, result) {
+        }, function (error, result) {
             if (!error) {
                 hospitalAddrList = result;
                 for (var i = 0; i < hospitalAddrList.length; i++) {
                     contractInstance.get_hospital.call(hospitalAddrList[i], {
                         gas: 1000000
-                    }, function(error, result) {
+                    }, function (error, result) {
+                        var list = document.getElementById("showListHospital");
+                        if (!error) {
+                            [a, b, c, d, e] = result;
+                            var option = document.createElement("option");
+                            option.text = a + " :" + b;
+                            list.add(option);
+                        } else console.log(error);
+                    });
+                }
+            } else console.log(error);
+        });
+        contractInstance.get_hospital_list.call({
+            gas: 1000000
+        }, function (error, result) {
+            if (!error) {
+                hospitalAddrList = result;
+                for (var i = 0; i < hospitalAddrList.length; i++) {
+                    contractInstance.get_hospital.call(hospitalAddrList[i], {
+                        gas: 1000000
+                    }, function (error, result) {
                         var list = document.getElementById("permithealthcareList");
                         if (!error) {
                             [a, b, c, d, e] = result;
@@ -752,7 +753,7 @@
                 }
             } else console.log(error);
         });
-        document.getElementById("permithealthcareList").addEventListener("change", function(event) {
+        document.getElementById("permithealthcareList").addEventListener("change", function (event) {
             const selectedValue = event.target.value;
             // add html to showSpeciaty
             var showSpeciaty = document.getElementById("showSpeciaty");
@@ -777,13 +778,30 @@
                                         <select id="specialtydepartmentList">
                                             <option value="" selected disabled>-- Chọn khoa --</option>
                                         </select>
-                                        <div class="selected-info" style="{ margin-top: 20px; font-size: 18px; color: #555; }">
-                                            <strong>Khoa đã chọn:</strong> <span id="selectedDepartment">Chưa chọn</span>
-                                        </div>
-                                        <buttun class="btn btn-success" onclick="viewCalender()">Choice</button>
-                                    </div>`;
-        });
+                                        <div id="selectedInfo" class="selected-info">
+                            <strong>Khoa đã chọn:</strong> <span id="selectedDepartment">Chưa chọn</span>
+                        </div>
+                        
+                        <!-- Nút Choice -->
+                        <button class="btn btn-success" onclick="viewCalender()">Choice</button>
 
+                        <!-- Lịch hẹn, sẽ hiển thị khi bấm nút "Choice" -->
+                        <div id="calendarContainer" class="calendar-container">
+                            <h4>Đặt Lịch Hẹn</h4>
+                            <form id="appointment-form" onsubmit="chosecaleder(event)">
+                    <label for="appointment-date">Chọn Ngày Hẹn:</label>
+                    <input type="date" id="appointment-date" name="appointment_date" required>
+                    <p class="note">* Vui lòng chọn một ngày phù hợp để đặt lịch.</p>
+                    <button type="submit" class="btn btn-success">Đặt Lịch Hẹn</button>
+                </form>
+                            <div id="confirmation" style="display: none;">
+                                <h3>Lịch Hẹn Đã Được Xác Nhận!</h3>
+                                <p id="appointment-details"></p>
+                            </div>
+                        </div>
+                    </div>
+                                    `;
+        });
     });
     function showDepartments() {
         const specialtyDropdown = document.getElementById("specialty");
@@ -843,7 +861,7 @@
         var table = document.getElementById("status-order");
         var index = element.parentNode.parentNode.rowIndex;
         var hospitalAddress = table.rows[index].cells[1].innerHTML;
-        contractInstance.remove_status_order_request.sendTransaction(hospitalAddress, {from: key, gas:1000000 , value: web3.toWei(2, 'ether')}, function(error) {
+        contractInstance.remove_status_order_request.sendTransaction(hospitalAddress, { from: key, gas: 1000000, value: web3.toWei(2, 'ether') }, function (error) {
             if (!error) {
                 console.log("Access status deleted");
             } else console.log(error);
@@ -854,18 +872,18 @@
         var index = hospital.selectedIndex;
         var hospitalList;
         contractInstance.get_hospital_list.call({
-                gas: 1000000
-            }, function(error, result) {
-                if (!error) {
-                    hospitalList = result;
-                    contractInstance.request_ordor_medicine.sendTransaction(hospitalList[index-1], { from: key, gas: 1000000, value: web3.toWei(2, 'ether') },  function(error) {
-                        if (!error)  {
-                            console.log("Request Order Medicine Success");
-                        }
-                        else console.log(error);
-                    });
-                } else console.log(error);
-            });
+            gas: 1000000
+        }, function (error, result) {
+            if (!error) {
+                hospitalList = result;
+                contractInstance.request_ordor_medicine.sendTransaction(hospitalList[index - 1], { from: key, gas: 1000000, value: web3.toWei(2, 'ether') }, function (error) {
+                    if (!error) {
+                        console.log("Request Order Medicine Success");
+                    }
+                    else console.log(error);
+                });
+            } else console.log(error);
+        });
     }
 
     function showRecords(element) {
@@ -1053,7 +1071,50 @@
             console.log("aasdasd", date);
         }
     });
+    function viewCalender() {
+        const departmentDropdown = document.getElementById("specialtydepartmentList");
+        const selectedDepartment = document.getElementById("selectedDepartment");
+        const calendarContainer = document.getElementById("calendarContainer");
 
+        const selectedDepartmentValue = departmentDropdown.value;
+        selectedDepartment.textContent = departmentDropdown.options[departmentDropdown.selectedIndex].text;
+
+        if (selectedDepartmentValue) {
+            calendarContainer.style.display = "block"; // Hiển thị lịch khi khoa được chọn và bấm "Choice"
+        } else {
+            alert("Vui lòng chọn một khoa trước khi chọn lịch.");
+        }
+    }
+    function chosecaleder(event) {
+    event.preventDefault();
+
+    // Get selected specialty
+    const specialtyElement = document.getElementById("specialty");
+    const selectedSpecialty = specialtyElement.options[specialtyElement.selectedIndex]?.text || "Chưa chọn";
+
+    // Get selected department
+    const departmentElement = document.getElementById("specialtydepartmentList");
+    const selectedDepartment = departmentElement.options[departmentElement.selectedIndex]?.text || "Chưa chọn";
+
+    // Get appointment date
+    const appointmentDate = document.getElementById("appointment-date").value || "Chưa chọn";
+
+    // Log information to the console
+    console.log("Thông tin lịch hẹn:");
+    console.log("Chuyên khoa:", selectedSpecialty);
+    console.log("Khoa:", selectedDepartment);
+    console.log("Ngày hẹn:", appointmentDate);
+
+    // Display confirmation (optional)
+    const confirmation = document.getElementById("confirmation");
+    const appointmentDetails = document.getElementById("appointment-details");
+
+    appointmentDetails.textContent = `Bạn đã chọn:
+    - Chuyên khoa: ${selectedSpecialty}
+    - Khoa: ${selectedDepartment}
+    - Ngày hẹn: ${appointmentDate}`;
+    confirmation.style.display = "block";
+}
 </script>
     </body>
 </html>
