@@ -141,33 +141,60 @@
             cursor: pointer;
         }
 
-        .month-selector {
+        /* Container cho các tháng */
+        .month-selector1 {
             display: flex;
             justify-content: center;
-            margin-bottom: 20px;
+            /* Canh giữa các nút */
             flex-wrap: wrap;
-            gap: 5px;
+            /* Cho phép xuống dòng */
+            gap: 10px;
+            /* Khoảng cách giữa các nút */
+            margin: 20px 0;
+            /* Khoảng cách trên và dưới */
         }
 
+        /* Nút tháng */
         .month-button {
-            background: #007bff;
-            color: black;
-            /* Sửa màu chữ thành màu đen */
-            padding: 8px 15px;
+            flex: 1 1 calc(25% - 20px);
+            /* Đảm bảo 4 nút mỗi dòng */
+            max-width: 100px;
+            /* Đặt chiều rộng tối đa */
+            padding: 10px;
+            font-size: 14px;
+            color: white;
+            background-color: #007bff;
             border: none;
             border-radius: 5px;
             cursor: pointer;
-            margin: 5px 2px;
-            font-size: 14px;
-            transition: all 0.3s ease;
+            text-align: center;
+            transition: background-color 0.3s ease, transform 0.2s ease;
         }
 
-        .month-button.active {
-            background: #0056b3;
-            color: white;
-            /* Giữ nguyên chữ trắng cho nút active */
-            transform: scale(1.1);
+        /* Hiệu ứng hover */
+        .month-button:hover {
+            background-color: #0056b3;
+            transform: scale(1.05);
         }
+
+        /* Nút tháng đang được chọn */
+        .month-button.active {
+            background-color: #28a745;
+            color: white;
+            font-weight: bold;
+            border: 2px solid #1e7e34;
+        }
+
+        /* Responsive cho màn hình nhỏ */
+        @media (max-width: 768px) {
+            .month-button {
+                flex: 1 1 calc(33.33% - 10px);
+                /* 3 nút mỗi dòng trên màn hình nhỏ */
+                font-size: 12px;
+                max-width: 80px;
+            }
+        }
+
 
         .calendar {
             display: grid;
@@ -219,10 +246,27 @@
             background: #218838;
         }
 
-       
+        .comments-container {
+            width: 100%;
+            /* Đặt chiều rộng cố định cho phần tử */
+            word-wrap: break-word;
+            /* Xuống dòng khi từ quá dài */
+            white-space: normal;
+            /* Cho phép xuống dòng tự nhiên */
+            overflow-wrap: break-word;
+            /* Đảm bảo nội dung không tràn ra ngoài */
+        }
 
-
-
+        .comments {
+            display: inline-block;
+            /* Giúp kiểm soát dòng nội dung */
+            max-width: 100%;
+            /* Giới hạn chiều rộng */
+            word-wrap: break-word;
+            /* Tự động xuống dòng */
+            white-space: pre-wrap;
+            /* Giữ định dạng xuống dòng và khoảng trắng */
+        }
     </style>
 </head>
 
@@ -554,18 +598,20 @@
             <div class="container1">
                 <h2>Doctor Yearly Work Schedule</h2>
                 <div class="header1">
-                    <label for="year-select">Select Year:</label>
-                    <select id="year-select">
-                        <!-- Years will be dynamically generated -->
-                    </select>
+                    <div>
+                        <label for="year-select">Select Year:</label>
+                        <select id="year-select">
+                            <!-- Years will be dynamically generated -->
+                        </select>
+                    </div>
                 </div>
-                <div class="month-selector">
+                <div class="month-selector1">
                     <!-- Month buttons -->
                 </div>
                 <div id="calendar" class="calendar">
                     <!-- Calendar will be dynamically generated -->
                 </div>
-               
+
             </div>
         </section>
 
@@ -607,6 +653,7 @@
             var a = 0;
 
             var b = 0;
+            setTimeout(applyPagination, 2000);
             contractInstance.get_healthcare.call(key, {
                 gas: 1000000
             }, function (error, result) {
@@ -803,6 +850,7 @@
                 if (!error) {
                     // const workingDaysInput = "2024-12-02, 2024-12-03, 2024-12-04, 2024-12-05, 2024-12-06, 2024-12-07, 2024-12-08, 2024-12-09, 2024-12-10, 2024-12-11, 2024-12-12, 2024-12-13, 2024-12-14";
                     const workingDaysInput = result;
+                    console.log("result", result)
                     const workingDays = new Set(workingDaysInput.split(',').map(date => date.trim()));
 
                     const months = [
@@ -811,7 +859,7 @@
                     ];
 
                     const yearSelect = document.getElementById('year-select');
-                    const monthSelector = document.querySelector('.month-selector');
+                    const monthSelector = document.querySelector('.month-selector1');
                     const calendar = document.getElementById('calendar');
                     const workdaysList = document.getElementById('workdays-list');
                     const saveButton = document.getElementById('save-schedule');
@@ -888,11 +936,11 @@
             var index = element.parentNode.parentNode.rowIndex;
             var hospitalAddress = table.rows[index].cells[1].innerHTML;
             var getshowSpecialty = document.getElementById("showSpecialty");
-            if(getshowSpecialty.innerText == "") {
-                contractInstance.get_specialty_healthcare.call(key, {gas:1000000}, function(error, result) {
+            if (getshowSpecialty.innerText == "") {
+                contractInstance.get_specialty_healthcare.call(key, { gas: 1000000 }, function (error, result) {
                     if (!error) {
                         var nameSpeciaty = result;
-                        getshowSpecialty.innerHTML=`<div class="container">
+                        getshowSpecialty.innerHTML = `<div class="container">
                                                 <h5>Chuyên Khoa hiện tại: ${nameSpeciaty}</h5>
                                                 <h4>Chọn Chuyên Khoa</h4>
                                                 <label for="specialty">Chuyên Khoa:</label>
@@ -918,7 +966,7 @@
                                             </div>`;
                     } else console.log(error);
                 })
-                
+
             } else {
                 getshowSpecialty.innerHTML = "";
             }
@@ -1091,18 +1139,9 @@
                                                     <div class="row">
                                                         <div class="form-group col-sm-10">
                                                             <div class="row">
-                                                                <div class="col-sm-2"><label for="ailmentsList" class="control-label">Diagnosis:</label></div>
+                                                                <div class="col-sm-2"><label for="ailmentsList2${patientAddress}" class="control-label">Diagnosis:</label></div>
                                                                 <div class="col-sm-10">
-                                                                    <select class="form-control" id="ailmentsList${patientAddress}" style="width:inherit;" required>
-                                                                        <option selected disabled>-- Please Select --</option>
-                                                                        <option value = "0">Common Flu</option>
-                                                                        <option value = "1">Viral Infection</option>
-                                                                        <option value = "2">Cancer</option>
-                                                                        <option value = "3">Tumor</option>
-                                                                        <option value = "4">Covid-19</option>
-                                                                        <option value = "5">Heart-Disorder</option>
-                                                                        <option value = "6">Other</option>
-                                                                    </select>
+                                                                    <input id="ailmentsList2${patientAddress}" style="width:inherit;" required placeholder="Enter name of disease"></input>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -1116,17 +1155,11 @@
                                                                 <div class="col-sm-10">
                                                                     <textarea class="form-control" rows="5" id="details" placeholder="Enter details to be added" name = "Details" style="width: inherit" required ></textarea>
                                                                     <!-- <input type="text" class="form-control" id="details" placeholder="Enter details to be added" name = "Details" style="width: inherit" required > -->
-
-                                                                    <div id="link2"></div>
-                                                                    <div id="link">Nothing Choosen..<div>
-                                                                    
-                                                                    <input type="file" id="upload"  onclick="abc(upload);rk();" required></input>
-
                                                                     <!--button class="btn btn-primary" onclick = "convert()">No Attachment</button>-->
 
                                                                         <!-- Danh sách thuốc -->
                                                                         <div id="medication-list">
-                                                                        <div class="medication-item">
+                                                                        <div class="medication-item1">
                                                                             <h3>Drug 1</h3>
                                                                             <div class="form-row">
                                                                                 <div class="form-group">
@@ -1155,9 +1188,15 @@
                                                                                 </div>
                                                                             </div>
                                                                         </div>
+                                                                        
                                                                         </div>
 <button type="button" id="addMedication" onclick="addMedication()">Thêm thuốc</button>
                                                                 </div>
+                                                            
+                                                                    <div id="link2"></div>
+                                                                    <div id="link">Nothing Choosen..<div>
+                                                                    <input type="file" id="upload"  onclick="abc(upload);rk();" required></input>
+                                                
                                                             </div>    
                                                         </div>
                                                         <div class="form-group col-sm-2">
@@ -1286,10 +1325,7 @@
                                                 <!-- <input type="text" class="form-control" id="details1" placeholder="Enter details to be added" name = "Details" style="width: inherit" required autofocus> -->
 
                                                 <div id="link21"></div>
-                                                <div id="link1">Nothing Choosen..<div>
                                                 
-                                                <input type="file" id="upload1"  onclick="abc(upload1);rk1();" required></input>
-
                                                 <!--button class="btn btn-primary" onclick = "convert()">No Attachment</button>-->
                                                 <!-- Danh sách thuốc -->
                                                 <div id="medication-list">
@@ -1324,7 +1360,11 @@
                                                 </div>
                                                 </div>
                                                 <button type="button" id="addMedication" onclick="addMedication()">Thêm thuốc</button>
-                                            </div>
+                                            <div id="link1">Nothing Choosen..<div>
+                                                
+                                                <input type="file" id="upload1"  onclick="abc(upload1);rk1();" required></input>
+
+                                                </div>
                                         </div>    
                                     </div>
                                     <div class="form-group col-sm-2">
@@ -1460,15 +1500,11 @@
         function submitDiagnosis(element, index) {
             var table = document.getElementById("viewPatient");
             var patientAddress = table.rows[index].cells[1].innerHTML;
-            console.log(patientAddress);
-            var diagnosis = $("#ailmentsList" + patientAddress).val();
-            diagnosis = parseInt(diagnosis);
-            var diagnosed = ailmentsDict[diagnosis];
+            console.log("patientAddress", patientAddress);
+            var diagnosis = document.getElementById("ailmentsList2" + patientAddress);
+            var diagnosed = diagnosis.value;
             var comments = document.getElementById("details").value;
-            //var app = document.getElementById("link").innerHTML;  
-            var app = document.getElementById("link").innerHTML;
-            //var url4="https://cloudflare-ipfs.com/ipfs/QmWqhvjor8YtepnN5c57pkAZeXyFMtDHFub8ML6eRUU2zA"
-            //document.getElementById("link").src=url4;
+
             var jbl = document.getElementById("link2").src;
             if (!isNaN(jbl)) {
                 var app = document.getElementById("link").src
@@ -1483,42 +1519,73 @@
 <img id="${imgId}" src="${app}" style="display:none; width:70%; height:auto;" />`;
             }
             var newRecords =
-                `<div style="border-bottom:1px solid;">
-<span style="font-weight:bold">Diagnosed By</span>   : ${docName}
-<span style="font-weight:bold">Diagnosis Time</span> : ${getDateTime()}
-<span style="font-weight:bold">Diagnosis</span>      : ${diagnosed}
-<span style="font-weight:bold">Comments</span>       : ${comments}
+                `<div >
+<span style="font-weight:bold">Sign By</span>   : ${docName}
+<span style="font-weight:bold">Time sign</span> : ${getDateTime()}
+<span style="font-weight:bold">Name of desease</span>      : ${diagnosed}
+<div class="comments-container">
+    <span style="font-weight:bold">Notes</span>: 
+    <span class="comments">${comments}</span>
+</div>
 </br>
 ${text}
 </div>
-`
-            var updatedRecords = newRecords + oldRecords;
-            if (!isNaN(diagnosis)) {
-                var buffer = Buffer(updatedRecords);
-                ipfs.files.add(buffer, (error, result) => {
-                    if (error) {
-                        console.log(error)
-                    } else {
-                        ipfshash = result[0].hash;
-                        contractInstance.submitfile(patientAddress, 3, ipfshash, {
-                            gas: 1000000
-                        }, function (error, result) {
-                            if (!error) {
-                                alert("Diagnosis has been submitted.");
-                                // delete content row
-                                table.deleteRow(index + 1);
-                                // delete main row of corresponding content row
-                                table.deleteRow(index);
-                            } else {
-                                $(".alert-danger").show();
-                                console.log(error);
-                            }
-                        })
-                    }
-                });
-            } else {
-                alert("Select a diagnosis");
+`;
+            var updatedRecords = newRecords;
+            var hTMLCollection = document.getElementsByClassName("medication-item1");
+            for (let i = 0; i < hTMLCollection.length; i++) {
+                var newMedicine = "";
+                if (!document.getElementById("medicationName" + (i + 1)).value == "")
+                    newMedicine = `<h3>Drug ${i + 1}</h3>
+<div class="form-row">
+        Name:<span id="medicationName${i + 1}" >${document.getElementById("medicationName" + (i + 1)).value}</span>  | 
+    Quantity: <span id="quantity${i + 1}" >${document.getElementById("quantity" + (i + 1)).value}</span>|
+Day Quantity: <span id="day${i + 1}" >${document.getElementById("day" + (i + 1)).value}</span>|
+     Evening: <span id="evening${i + 1}" >${document.getElementById("evening" + (i + 1)).value}</span>|
+   Afternoon:<span id="afternoon${i + 1}" >${document.getElementById("afternoon" + (i + 1)).value}</span>|
+       Night: <span id="night${i + 1}" >${document.getElementById("night" + (i + 1)).value}</span>|
+</div>`
+                updatedRecords = updatedRecords + "</br>" + newMedicine;
             }
+
+            var recordHash;
+            contractInstance.get_patient(patientAddress, { gas: 1000000 }, function (error, result) {
+                if (!error) {
+                    recordHash = result[4];
+                    console.log("---recordHash:", recordHash);
+                    $.get("http://localhost:8081/ipfs/" + recordHash, function (data) {
+                        if (!error) {
+                            updatedRecords = `<div class="recordSign" style="border-bottom:1px solid;">` + updatedRecords + `<span>key doctor: ${key}</span><p class="checkOrderSuccess" value="No"></p></div>` + data;
+                            console.log("---data:", data);
+                            console.log("123123123123:", updatedRecords);
+                            if (diagnosed != "") {
+                                var buffer = Buffer(updatedRecords);
+                                ipfs.files.add(buffer, (error, result) => {
+                                    if (error) {
+                                        console.log(error)
+                                    } else {
+                                        ipfshash = result[0].hash;
+                                        console.log(ipfshash, ":", result);
+                                        contractInstance.submitfile(patientAddress, ipfshash, {
+                                            gas: 1000000
+                                        }, function (error, result) {
+                                            if (!error) {
+                                                alert("Diagnosis has been submitted.");
+                                            } else {
+                                                console.log(error);
+                                            }
+                                        })
+                                    }
+                                });
+                            } else {
+                                alert("Enter name of disease");
+                            }
+                        }
+                        else console.log(error);
+                    })
+                }
+                else console.error(error);
+            });
         }
         function addMedication() {
             // Lấy danh sách thuốc
@@ -1604,7 +1671,10 @@ ${text}
 <span style="font-weight:bold">Sign By</span>   : ${docName}
 <span style="font-weight:bold">Time sign</span> : ${getDateTime()}
 <span style="font-weight:bold">Name of desease</span>      : ${diagnosed}
-<span style="font-weight:bold">Notes</span>       : ${comments}
+<div class="comments-container">
+    <span style="font-weight:bold">Notes</span>: 
+    <span class="comments">${comments}</span>
+</div>
 </br>
 ${text}
 </div>
@@ -1616,12 +1686,12 @@ ${text}
                 if (!document.getElementById("medicationName" + (i + 1)).value == "")
                     newMedicine = `<h3>Drug ${i + 1}</h3>
 <div class="form-row">
-        Name:<span id="medicationName${i + 1}" >${document.getElementById("medicationName" + (i + 1)).value}</span>   
-    Quantity: <span id="quantity${i + 1}" >${document.getElementById("quantity" + (i + 1)).value}</span>
-Day Quantity: <span id="day${i + 1}" >${document.getElementById("day" + (i + 1)).value}</span>
-     Evening: <span id="evening${i + 1}" >${document.getElementById("evening" + (i + 1)).value}</span>
-   Afternoon:<span id="afternoon${i + 1}" >${document.getElementById("afternoon" + (i + 1)).value}</span>
-       Night: <span id="night${i + 1}" >${document.getElementById("night" + (i + 1)).value}</span>
+        Name:<span id="medicationName${i + 1}" >${document.getElementById("medicationName" + (i + 1)).value}</span>  | 
+    Quantity: <span id="quantity${i + 1}" >${document.getElementById("quantity" + (i + 1)).value}</span>|
+Day Quantity: <span id="day${i + 1}" >${document.getElementById("day" + (i + 1)).value}</span>|
+     Evening: <span id="evening${i + 1}" >${document.getElementById("evening" + (i + 1)).value}</span>|
+   Afternoon:<span id="afternoon${i + 1}" >${document.getElementById("afternoon" + (i + 1)).value}</span>|
+       Night: <span id="night${i + 1}" >${document.getElementById("night" + (i + 1)).value}</span>|
 </div>`
                 updatedRecords = updatedRecords + "</br>" + newMedicine;
             }
@@ -1632,7 +1702,7 @@ Day Quantity: <span id="day${i + 1}" >${document.getElementById("day" + (i + 1))
                     console.log("---recordHash:", recordHash);
                     $.get("http://localhost:8081/ipfs/" + recordHash, function (data) {
                         if (!error) {
-                            updatedRecords = `<div class="recordSign" style="border-bottom:1px solid;">` + updatedRecords + `<span>key patient: ${key}</span><p class="checkOrderSuccess" value="No"></p></div>` + data;
+                            updatedRecords = `<div class="recordSign" style="border-bottom:1px solid;">` + updatedRecords + `<span>key doctor: ${key}</span><p class="checkOrderSuccess" value="No"></p></div>` + data;
                             console.log("---data:", data);
                             console.log("123123123123:", updatedRecords);
                             if (diagnosed != "") {
@@ -1665,6 +1735,58 @@ Day Quantity: <span id="day${i + 1}" >${document.getElementById("day" + (i + 1))
             });
         }
 
+
+        Copier
+        // Hàm phân trang
+        function paginateTable(tableId, rowsPerPage) {
+            const table = document.getElementById(tableId);
+            const rows = Array.from(table.getElementsByTagName('tr')).slice(1); // Bỏ qua hàng tiêu đề
+            const totalRows = rows.length;
+            const totalPages = Math.ceil(totalRows / rowsPerPage);
+
+            // Tạo nút phân trang
+            const paginationDiv = document.createElement('div');
+            paginationDiv.id = `${tableId}-pagination`;
+            paginationDiv.style.marginTop = "10px";
+
+            // Hiển thị một trang
+            function displayPage(page) {
+                rows.forEach((row, index) => {
+                    row.style.display = (index >= (page - 1) * rowsPerPage && index < page * rowsPerPage) ? '' : 'none';
+                });
+
+                // Cập nhật trạng thái nút
+                Array.from(paginationDiv.children).forEach((btn, index) => {
+                    if (index + 1 === page) btn.classList.add('active');
+                    else btn.classList.remove('active');
+                });
+            }
+
+            // Tạo nút cho từng trang
+            for (let i = 1; i <= totalPages; i++) {
+                const button = document.createElement('button');
+                button.innerHTML = i;
+                button.style.margin = "0 5px";
+                button.style.padding = "5px 10px";
+                button.style.cursor = "pointer";
+                button.onclick = () => displayPage(i);
+                paginationDiv.appendChild(button);
+            }
+
+            // Thêm nút phân trang vào cuối bảng
+            table.parentNode.insertBefore(paginationDiv, table.nextSibling);
+
+            // Hiển thị trang đầu tiên
+            displayPage(1);
+        }
+
+        // Hàm áp dụng phân trang cho các bảng
+        function applyPagination() {
+            paginateTable('viewHospital', 5);        // Phân trang bảng viewHospital (5 hàng/trang)
+            paginateTable('viewPatient', 5);        // Phân trang bảng viewPatient (5 hàng/trang)
+            paginateTable('showQueuePaitent', 5);   // Phân trang bảng showQueuePaitent (5 hàng/trang)
+            paginateTable('permithealthcareList', 5); // Phân trang bảng permithealthcareList (5 hàng/trang)
+        }
 
 
     </script>

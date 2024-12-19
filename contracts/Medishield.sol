@@ -201,9 +201,7 @@ contract Medishield {
                 msg.sender.transfer(2 ether);
                 creditPool -= 2;
                 patientFound = true;
-                
             }
-            
         }
         if(patientFound==true){
             set_hash(paddr, _hash);
@@ -306,6 +304,7 @@ contract Medishield {
     function get_specialty_healthcare(address addr) public view returns(string memory) {
         return healthcareInfo[addr].specialty;
     }
+ 
     function get_working_days(address addr) public view  returns (string memory) {
          return healthcareInfo[addr].workingDays;
     }
@@ -343,5 +342,58 @@ contract Medishield {
     //     hospitalInfo[paddr].medincines = _hash;
     // }
     //
+
+    function getAddressesByField(string memory _field, bool isSpecialty) public view returns (address[] memory) {
+        address[] memory matchingAddresses = new address[](healthcareList.length);
+        uint count = 0;
+
+        for (uint i = 0; i < healthcareList.length; i++) {
+            string memory compareField = isSpecialty 
+                ? healthcareInfo[healthcareList[i]].specialty 
+                : healthcareInfo[healthcareList[i]].workingDays;
+
+            // Kiểm tra giá trị
+            if (
+                (isSpecialty && keccak256(abi.encodePacked(compareField)) == keccak256(abi.encodePacked(_field))) || 
+                (!isSpecialty && contains(compareField, _field))
+            ) {
+                matchingAddresses[count] = healthcareList[i];
+                count++;
+            }
+        }
+
+        
+        address[] memory result = new address[](count);
+        for (uint j = 0; j < count; j++) {
+            result[j] = matchingAddresses[j];
+        }
+
+        return result;
+    }
+    function contains(string memory _base, string memory _value) internal pure returns (bool) {
+        bytes memory baseBytes = bytes(_base);
+        bytes memory valueBytes = bytes(_value);
+
+        // Trả về false nếu chuỗi _value rỗng hoặc dài hơn chuỗi _base
+        if (valueBytes.length == 0 || valueBytes.length > baseBytes.length) {
+            return false;
+        }
+
+        for (uint i = 0; i <= baseBytes.length - valueBytes.length; i++) {
+            bool matchFound = true;
+            for (uint j = 0; j < valueBytes.length; j++) {
+                if (baseBytes[i + j] != valueBytes[j]) {
+                    matchFound = false;
+                    break;
+                }
+            }
+            if (matchFound) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
 }
 

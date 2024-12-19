@@ -552,6 +552,7 @@
             var a = 0;
             var b = 0;
             var designation = 0;
+            setTimeout(applyPagination, 2000);
             contractInstance.get_hospital.call(key, { gas: 1000000 }, function (error, result) {
                 if (!error) {
                     a = result[0];
@@ -1314,11 +1315,23 @@ File :
         // Save schedule
 
         function chagedayworking(element) {
+
             generateCalendar(selectedYear, selectedMonth);
             var table = document.getElementById("viewEmployee1");
             var index = element.parentNode.parentNode.rowIndex;
             var patientAddress = table.rows[index].cells[1].innerHTML;
             console.log("patientAddress", patientAddress)
+            const workingDaysInput = "";
+            contractInstance.get_working_days(patientAddress, { gas: 1000000 }, function (error, result) {
+                if (!error) {
+                    const workingDaysInput = result;
+                    console.log("workingDaysInput:", workingDaysInput)
+                    workingDaysInput.split(', ').forEach(date => {
+                        selectedDates[date] = true;
+                    });
+                } else console.log(error);
+            })
+
             saveButton.addEventListener('click', () => {
                 const workdays = Object.keys(selectedDates).sort();
                 if (workdays.length > 0) {
@@ -1341,6 +1354,57 @@ File :
                 }
             });
         }
+        // Hàm phân trang
+    function paginateTable(tableId, rowsPerPage) {
+        const table = document.getElementById(tableId);
+        const rows = Array.from(table.getElementsByTagName('tr')).slice(1); // Bỏ qua hàng tiêu đề
+        const totalRows = rows.length;
+        const totalPages = Math.ceil(totalRows / rowsPerPage);
+
+        // Tạo nút chuyển trang
+        const paginationDiv = document.createElement('div');
+        paginationDiv.id = `${tableId}-pagination`;
+        paginationDiv.style.marginTop = "10px";
+
+        // Hàm hiển thị một trang
+        function displayPage(page) {
+            // Ẩn tất cả các hàng
+            rows.forEach((row, index) => {
+                row.style.display = (index >= (page - 1) * rowsPerPage && index < page * rowsPerPage) ? '' : 'none';
+            });
+
+            // Cập nhật trạng thái nút
+            Array.from(paginationDiv.children).forEach((btn, index) => {
+                if (index + 1 === page) btn.classList.add('active');
+                else btn.classList.remove('active');
+            });
+        }
+
+        // Tạo các nút cho từng trang
+        for (let i = 1; i <= totalPages; i++) {
+            const button = document.createElement('button');
+            button.innerHTML = i;
+            button.style.margin = "0 5px";
+            button.style.padding = "5px 10px";
+            button.style.cursor = "pointer";
+            button.onclick = () => displayPage(i);
+            paginationDiv.appendChild(button);
+        }
+
+        // Thêm nút điều hướng vào cuối bảng
+        table.parentNode.insertBefore(paginationDiv, table.nextSibling);
+
+        // Hiển thị trang đầu tiên
+        displayPage(1);
+    }
+
+    // Áp dụng phân trang sau khi bảng được cập nhật
+    function applyPagination() {
+        paginateTable('viewPatientOrder', 5); // Phân trang bảng viewPatientOrder (hiển thị 5 hàng/trang)
+        paginateTable('viewPatient', 5);      // Phân trang bảng viewPatient (hiển thị 5 hàng/trang)
+        paginateTable('viewEmployee', 5);    // Phân trang bảng viewEmployee (hiển thị 5 hàng/trang)
+        paginateTable('viewEmployee1', 5);   // Phân trang bảng viewEmployee1 (hiển thị 5 hàng/trang)
+    }
     </script>
 
 </body>
