@@ -594,7 +594,7 @@
             </div>
 
         </section>
-        <section class="resume-section" id="workingday">
+        <section class="resume-section" id="workday">
             <div class="container1">
                 <h2>Doctor Yearly Work Schedule</h2>
                 <div class="header1">
@@ -777,8 +777,7 @@
                                 cell2.innerHTML = hospitalAddress;
                                 cell3.innerHTML =
                                     `<input class="btn btn-danger" onclick="resignJob(this)" id="${addr}" type="button" value="Resign"></input>
-                                    <input class="btn btn-info" onclick="choiceSpecialty(this)" type="button" style="margin-top:10px;" value="Specialty"></input>
-                                    <input class="btn btn-success" onclick="viewCalender(this)" type="button" style="margin-top:10px;" value="view Calender"></input>`;
+                                    <input class="btn btn-info" onclick="choiceSpecialty(this)" type="button" style="margin-top:10px;" value="Specialty"></input>`;
                                 //cell4.innerHTML = `<input class="btn-outline-primary" type="file"  id="upload" type="button" onclick="abc(upload) placeholder="ho"></input>`;
                             } else
                                 console.error(error);
@@ -1115,6 +1114,8 @@
             }, function (error) {
                 if (!error) {
                     console.log("Resign job from doctor");
+                    alert("Resign job from doctor");
+                    location.reload();
                 } else console.log(error);
             })
         }
@@ -1487,6 +1488,7 @@
                             console.log("patientToBeAdded", patientToBeAdded);
                             console.log("key : ", key);
                             console.log("Contract successfull");
+                            alert("Contract was completed.");
                         } else {
                             $(".alert-info").show();
                             console.log(error);
@@ -1504,7 +1506,7 @@
             var diagnosis = document.getElementById("ailmentsList2" + patientAddress);
             var diagnosed = diagnosis.value;
             var comments = document.getElementById("details").value;
-
+            var app = document.getElementById("link").innerHTML;
             var jbl = document.getElementById("link2").src;
             if (!isNaN(jbl)) {
                 var app = document.getElementById("link").src
@@ -1734,9 +1736,6 @@ Day Quantity: <span id="day${i + 1}" >${document.getElementById("day" + (i + 1))
                 else console.error(error);
             });
         }
-
-
-        Copier
         // Hàm phân trang
         function paginateTable(tableId, rowsPerPage) {
             const table = document.getElementById(tableId);

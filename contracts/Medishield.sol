@@ -16,6 +16,8 @@ contract Medishield {
         address[] wasDeletedRequestOrderMedicine;  // -1
         address[] successRequestOrderMedicine; // 3
         address[] waitPaymentRequestOrderMedicine; // 2
+        address[] cancelPaymentRequestOrderMedicine;
+        address[] queuePatientGetMedicineSuccess;
     }
     
     struct healthcare {
@@ -335,13 +337,7 @@ contract Medishield {
     function get_hospital_list() public view returns (address[] memory) {
         return hospitalList;
     }
-    // function get_medincines(address addr) public view returns(string memory) {
-    //     return hospitalInfo[addr].medincines;
-    // }
-    // function set_medincine(address paddr, string memory _hash) public {
-    //     hospitalInfo[paddr].medincines = _hash;
-    // }
-    //
+  
 
     function getAddressesByField(string memory _field, bool isSpecialty) public view returns (address[] memory) {
         address[] memory matchingAddresses = new address[](healthcareList.length);
@@ -395,5 +391,31 @@ contract Medishield {
         return false;
     }
 
-}
+    function send_request_payment(address addr, string memory _hash) payable public {
+        require(msg.value == 2 ether);
+        creditPool += 2;
+        hospitalInfo[msg.sender].medicines = _hash;
+        patientInfo[addr].waitPaymentRequestOrderMedicine.push(msg.sender)-1;
+        creditPool -= 1;
+        remove_element_in_array(patientInfo[addr].waitHandleRequestOrderMedicine, msg.sender);
+    }
+    function payment_medicine_success(address addr) payable public {
+        require(msg.value == 2 ether);
+        creditPool +=2;
+        patientInfo[msg.sender].successRequestOrderMedicine.push(addr)-1;
+        creditPool -= 1;
+        remove_element_in_array(patientInfo[msg.sender].waitPaymentRequestOrderMedicine, addr);
+    }
+    function cancel_payment_medicine(address addr) payable public {
+        require(msg.value == 2 ether);
+        creditPool += 2;
+        patientInfo[msg.sender].cancelPaymentRequestOrderMedicine.push(addr)-1;
+        creditPool -=1;
+        remove_element_in_array(patientInfo[msg.sender].waitPaymentRequestOrderMedicine, addr);
+    }
+    function get_cancel_payment_request_order_medicine(address addr) public view returns(address[] memory) {
+            address[] storage hospitalAddr =  patientInfo[addr].cancelPaymentRequestOrderMedicine;
+            return hospitalAddr;
+        }
 
+}

@@ -262,6 +262,7 @@
                                     <th>Patient</th>
                                     <th class="publicKeyPatient">Public Key</th>
                                     <th>Action</th>
+                                    
                                 </tr>
                             </table>
                         </div>
@@ -572,14 +573,12 @@
                 if (!error) {
                     patientAddressList = result;
                     console.log(result);
-
                     patientAddressList.forEach(function (patientAddress, index) {
                         contractInstance.get_patient.call(patientAddress, { gas: 1000000 }, function (error, result) {
                             var table = document.getElementById("viewPatientOrder");
                             if (!error) {
                                 [a, b] = result;
                                 console.log(a);
-
                                 var row = table.insertRow(index + 1);
                                 var cell1 = row.insertCell(0);
                                 var cell2 = row.insertCell(1);
@@ -587,9 +586,40 @@
                                 cell2.className = "publicKeyPatient";
                                 cell1.innerHTML = a;
                                 cell2.innerHTML = patientAddress;
-                                cell3.innerHTML = `<input class="btn btn-success" onclick="accessOrder(this)" id="access-order" type="button" value="Access"></input>
-                            <input class="btn btn-danger" onclick="cancelOrder(this)" id="cancel-order" type="button" value="Cancel" style="margin-top:10px;"></input>`;
-                            }
+                                    console.log("sljdhfkjdshfdhfjkhj")
+                                    contractInstance.get_wait_payment_request_order_medicine(patientAddress, { gas: 1000000 }, function (error, result) {
+                                        if (!error) {
+                                            if(result != "") {
+                                                cell3.innerHTML = `<input class="btn btn-info" id="access-order" type="button" value="Wait Payment"></input>
+                                                <input class="btn btn-danger" onclick="cancelOrder(this)" id="cancel-order" type="button" value="Cancel" style="margin-top:10px;"></input>`;
+                                            }
+                                        } else console.log(error);
+                                    });
+                                    contractInstance.get_success_request_order_medicine(patientAddress, { gas: 1000000 }, function (error, result) {
+                                        if (!error) {
+                                            if(result != "") {
+                                                cell3.innerHTML = `<input class="btn btn-success" id="access-order" type="button" value="Payment Success"></input>
+                                                <input class="btn btn-danger" onclick="cancelOrder(this)" id="cancel-order" type="button" value="Cancel" style="margin-top:10px;"></input>`;
+                                            }
+                                        } else console.log(error);
+                                    });
+                                    contractInstance.get_cancel_payment_request_order_medicine(patientAddress, { gas: 1000000 }, function (error, result) {
+                                        if (!error) {
+                                            if(result != "") {
+                                                cell3.innerHTML = `<input class="btn btn-info" id="access-order" type="button" value="Wait Payment"></input>
+                                                <input class="btn btn-danger" onclick="cancelOrder(this)" id="cancel-order" type="button" value="Cancel" style="margin-top:10px;"></input>`;
+                                            }
+                                        } else console.log(error);
+                                    });
+                                    contractInstance.get_wait_handle_request_order_medicine(patientAddress, { gas: 1000000 }, function (error, result) {
+                                        if (!error) {
+                                            if(result != "") {
+                                                cell3.innerHTML = `<input class="btn btn-success" onclick="accessOrder(this)" id="access-order" type="button" value="Access"></input>
+                                                <input class="btn btn-danger" onclick="cancelOrder(this)" id="cancel-order" type="button" value="Cancel" style="margin-top:10px;"></input>`;
+                                            }
+                                        } else console.log(error);
+                                    });
+                                }
                             else
                                 console.error(error);
                         })
@@ -619,7 +649,7 @@
                                 cell2.className = "publicKeyPatient";
                                 cell1.innerHTML = a;
                                 cell2.innerHTML = patientAddress;
-                                cell3.innerHTML = '<input class="btn btn-success" onclick="showRecords(this)" id="viewRecordsButton" type="button" value="Upload Report"></input>';
+                                cell3.innerHTML = '<input class="btn btn-success" onclick="showRecords(this)" id="viewRecordsButton" type="button" ></input>';
                                 //cell4.innerHTML = `<input class="btn-outline-primary" type="file"  id="upload" type="button" onclick="abc(upload) placeholder="ho"></input>`;
 
 
@@ -702,7 +732,7 @@
                                 cell2.className = "publicKeyEmployee1";
                                 cell1.innerHTML = a;
                                 cell2.innerHTML = EmployeeAddress;
-                                cell3.innerHTML = `<input class="btn btn-danger" onclick="chagedayworking(this)" id="${addr}" type="button" value="Fired"></input>`;
+                                cell3.innerHTML = `<input class="btn btn-danger" onclick="chagedayworking(this)" id="${addr}" type="button" value="Choice Doctor"></input>`;
                             }
                             else
                                 console.error(error);
@@ -788,7 +818,7 @@
                                         var querydoc2 = doc2.getElementsByClassName("recordSign")[0];
                                         var count2 = querydoc2.getElementsByClassName("form-row");
                                         var querydoc1 = doc1.getElementsByClassName("childMedicine");
-                                        var countPrice = querydoc2.length;
+                                        var countPrice = count2.length;
                                         var price = 0;
                                         var changeData = doc1;
                                         for (let i = 0; i < count2.length; i++) {
@@ -807,7 +837,7 @@
                                                 if (medicationName.textContent == checkName.textContent && parseInt(quantity.textContent) <= parseInt(countMedicine.textContent)) {
                                                     countPrice -= 1;
                                                     price += parseFloat(parseInt(quantity.textContent) * parseInt(priceMedicine.textContent));
-                                                    changeData.getElementsByClassName("childMedicine")[i].getElementsByClassName("quantity")[0].textContent = parseInt(countMedicine) - parseInt(quantity);
+                                                    changeData.getElementsByClassName("childMedicine")[i].getElementsByClassName("quantity")[0].textContent = parseInt(countMedicine.textContent) - parseInt(quantity.textContent);
                                                     console.log(changeData.getElementsByClassName("childMedicine")[i].getElementsByClassName("quantity")[0].textContent);
                                                     break;
                                                 }
@@ -815,30 +845,27 @@
                                         }
                                         console.log("text:", changeData);
                                         if (countPrice == 0) {
-                                            // var buffer = Buffer(changeData);
-                                            // ipfs.files.add(buffer, (error, result) => {
-                                            //     var ipfshash;
-                                            //     if (!error) {
-                                            //         ipfshash = result[0].hash;
-                                            //         contractInstance.add_store_medicine.sendTransaction(ipfshash, {from: key, gas:1000000 , value: web3.toWei(2, 'ether')}, function(error) {
-                                            //             if(!error) {
-                                            //                 console.log("Medicine edit successfully");
-                                            //             } else console.log(error);
-                                            //         });
-                                            //     } else console.log(error);
-                                            // })
-                                            var random = Math.floor(Math.random() * 90000000) + 10000000;
+                                            var buffer = Buffer(changeData.toString());
+                                            ipfs.files.add(buffer, (error, result) => {
+                                                var ipfshash;
+                                                if (!error) {
+                                                    ipfshash = result[0].hash;
+                                                    contractInstance.send_request_payment.sendTransaction(patientAddress, ipfshash, {from: key, gas:1000000 , value: web3.toWei(2, 'ether')}, function(error) {
+                                                        if(!error) {
+                                                            console.log("Medicine edit successfully");
+                                                            alert("Send Payment Success!");
+                                                        } else console.log(error);
+                                                    });
+                                                } else console.log(error);
+                                            })
                                             // Payment
-
-                                            //
-                                            alert("Send Payment Success!");
                                         } else {
                                             alert("Patient has no enough medicine to fulfill the order");
-                                            // contractInstance.remove_order_request.sendTransaction(patientAddress, {from: key, gas:100000}, function(error) {
-                                            //     if(!error) {
-                                            //         console.log("Order request removed!");
-                                            //     } else console.log(error);
-                                            // })
+                                            contractInstance.remove_order_request.sendTransaction(patientAddress, {from: key, gas:100000}, function(error) {
+                                                if(!error) {
+                                                    console.log("Order request removed!");
+                                                } else console.log(error);
+                                            })
                                         }
                                     })
                                 })
@@ -861,46 +888,95 @@
         }
 
         function showAllMedicine() {
-            var element = document.getElementById("show-medicines");
-            if (element.children.length == 0) {
-                contractInstance.get_hospital.call(key, { gas: 1000000 }, function (error, result) {
-                    if (!error) {
-                        var hashMedicine = result[3];
-                        $.get("http://localhost:8081/ipfs/" + hashMedicine, function (data) {
-                            var parser = new DOMParser();
-                            var doc = parser.parseFromString(data, "text/html");
-                            var countRow = doc.getElementsByClassName("medicineCode");
-                            var text = "";
-                            for (let i = 0; i < countRow.length; i++) {
-                                var medicineCode = doc.getElementsByClassName("medicineCode")[i].textContent;
-                                var medicineName = doc.getElementsByClassName("medicineName")[i].textContent;
-                                var quantity = doc.getElementsByClassName("quantity")[i].textContent;
-                                var price = doc.getElementsByClassName("price")[i].textContent;
-                                text = text + `<h5>Product ${i + 1}</h5>
-    <form style="margin-left:15px;">
-        <div class="form-group">
-            <label for="code">Code:</label>${medicineCode}
-        </div>
-        <div class="form-group">
-            <label for="name">Name:</label>${medicineName}
-        </div>
-        <div class="form-group">
-            <label for="quantity">Quantity:</label>${quantity}
-        </div>
-        <div class="form-group">
-            <label for="price">Price:</label>${price}
-        </div>
-    </form>`;
-                            }
-                            element.innerHTML = text;
-                        })
-                    } else console.log(error);
-                })
-            } else {
-                element.innerHTML = "";
-            }
+    var element = document.getElementById("show-medicines");
+    if (element.children.length == 0) {
+        contractInstance.get_hospital.call(key, { gas: 1000000 }, function (error, result) {
+            if (!error) {
+                var hashMedicine = result[3];
+                $.get("http://localhost:8081/ipfs/" + hashMedicine, function (data) {
+                    var parser = new DOMParser();
+                    var doc = parser.parseFromString(data, "text/html");
+                    var countRow = doc.getElementsByClassName("medicineCode");
+                    var medicines = [];
+                    for (let i = 0; i < countRow.length; i++) {
+                        medicines.push({
+                            code: doc.getElementsByClassName("medicineCode")[i].textContent,
+                            name: doc.getElementsByClassName("medicineName")[i].textContent,
+                            quantity: doc.getElementsByClassName("quantity")[i].textContent,
+                            price: doc.getElementsByClassName("price")[i].textContent,
+                        });
+                    }
 
-        }
+                    // Pagination logic
+                    var currentPage = 1;
+                    var itemsPerPage = 10;
+                    var totalPages = Math.ceil(medicines.length / itemsPerPage);
+
+                    function renderTable(page) {
+                        var startIndex = (page - 1) * itemsPerPage;
+                        var endIndex = Math.min(startIndex + itemsPerPage, medicines.length);
+
+                        var text = `
+                            <table style="width: 100%; border-collapse: collapse; margin-top: 20px; font-family: Arial, sans-serif; font-size: 14px; color: #333;">
+                                <thead>
+                                    <tr style="background-color: #f4f4f4; border-bottom: 2px solid #ddd; text-align: left;">
+                                        <th style="padding: 10px;">Code</th>
+                                        <th style="padding: 10px;">Name</th>
+                                        <th style="padding: 10px;">Quantity</th>
+                                        <th style="padding: 10px;">Price</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                        `;
+
+                        for (let i = startIndex; i < endIndex; i++) {
+                            text += `
+                                <tr style="${i % 2 === 0 ? 'background-color: #fafafa;' : 'background-color: #ffffff;'}">
+                                    <td style="padding: 10px; border-bottom: 1px solid #ddd;">${medicines[i].code}</td>
+                                    <td style="padding: 10px; border-bottom: 1px solid #ddd;">${medicines[i].name}</td>
+                                    <td style="padding: 10px; border-bottom: 1px solid #ddd;">${medicines[i].quantity}</td>
+                                    <td style="padding: 10px; border-bottom: 1px solid #ddd;">${medicines[i].price}</td>
+                                </tr>
+                            `;
+                        }
+
+                        text += `
+                                </tbody>
+                            </table>
+                        `;
+
+                        // Pagination controls
+                        text += `
+                            <div style="margin-top: 10px; text-align: center; font-family: Arial, sans-serif;">
+                                <button ${currentPage === 1 ? 'disabled' : ''} onclick="changePage(-1)" style="padding: 5px 10px; margin-right: 5px;">Previous</button>
+                                <span>Page ${currentPage} of ${totalPages}</span>
+                                <button ${currentPage === totalPages ? 'disabled' : ''} onclick="changePage(1)" style="padding: 5px 10px; margin-left: 5px;">Next</button>
+                            </div>
+                        `;
+
+                        element.innerHTML = text;
+                    }
+
+                    function changePage(direction) {
+                        currentPage += direction;
+                        renderTable(currentPage);
+                    }
+
+                    // Expose `changePage` to global scope
+                    window.changePage = changePage;
+
+                    // Initial render
+                    renderTable(currentPage);
+                });
+            } else {
+                console.log(error);
+            }
+        });
+    } else {
+        element.innerHTML = "";
+    }
+}
+
         function cancelOrder(element) {
             var table = document.getElementById("viewPatientOrder");
             var index = element.parentNode.parentNode.rowIndex;
@@ -1188,15 +1264,15 @@
 
             var newRecords =
                 `Diagnosed By : ${labName}
-Diagnosis Time : ${getDateTime()}
-Diagnosis : ${diagnosed}
-Comments : ${comments}
-File :
-<iframe src=${app}#toolbar=0&navpanes=0&scrollbar=0  width="100%" height="400">
-            <p>Your browser does not support iframes.</p>
-        </iframe>
-        
-`
+                Diagnosis Time : ${getDateTime()}
+                Diagnosis : ${diagnosed}
+                Comments : ${comments}
+                File :
+                <iframe src=${app}#toolbar=0&navpanes=0&scrollbar=0  width="100%" height="400">
+                            <p>Your browser does not support iframes.</p>
+                        </iframe>
+                        
+                `
 
             var updatedRecords = newRecords + oldRecords;
 
@@ -1405,8 +1481,8 @@ File :
         paginateTable('viewEmployee', 5);    // Phân trang bảng viewEmployee (hiển thị 5 hàng/trang)
         paginateTable('viewEmployee1', 5);   // Phân trang bảng viewEmployee1 (hiển thị 5 hàng/trang)
     }
+    
     </script>
-
 </body>
 
 </html>

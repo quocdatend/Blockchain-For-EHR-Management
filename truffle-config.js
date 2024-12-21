@@ -1,40 +1,28 @@
-/**
- * Use this file to configure your truffle project. It's seeded with some
- * common settings for different networks and features like migrations,
- * compilation and testing. Uncomment the ones you need or modify
- * them to suit your project as necessary.
- *
- * More information about configuration can be found at:
- *
- * trufflesuite.com/docs/advanced/configuration
- *
- */
-
 module.exports = {
   networks: {
     development: {
-     host: "127.0.0.1",     // Localhost (default: none)
-     port: 8545,            // Standard Ethereum port (default: none)
-     network_id: "5777",       // Any network (default: none)
+      host: "127.0.0.1",     // Localhost (mặc định: không có)
+      port: 8545,            // Cổng Ethereum chuẩn (mặc định: không có)
+      network_id: "5777",     // Mạng nào cũng được (mặc định: không có)
     },
   },
 
-  // Set default mocha options here, use special reporters etc.
   mocha: {
     // timeout: 100000
   },
 
-  // Configure your compilers
+  // Cấu hình biên dịch
   compilers: {
     solc: {
-      version: "0.5.1",    // Fetch exact version from solc-bin (default: truffle's version)
+      version: "0.5.1",    // Lấy đúng phiên bản từ solc-bin (mặc định: phiên bản của Truffle)
+      settings: {
+        optimizer: {
+          enabled: true,   // Bật tối ưu hóa
+          runs: 200        // Điều chỉnh số lần chạy tối ưu hóa (giảm số lần nếu cần)
+        }
+      }
     }
   },
-
-  // Truffle DB is currently disabled by default; to enable it, change enabled: false to enabled: true
-  // Note: if you migrated your contracts prior to enabling this field in your Truffle project and want
-  // those previously migrated contracts available in the .db directory, you will need to run the following:
-  // $ truffle migrate --reset --compile-all
 
   db: {
     enabled: false
