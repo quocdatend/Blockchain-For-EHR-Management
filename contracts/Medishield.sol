@@ -26,7 +26,8 @@ contract Medishield {
         uint designation;
         address[] patientAccessList; // view
         address[] queuDoctorSign; // sign
-        address[] queuePatient; // patients
+        // address[] queuePatient; // patients
+         mapping(string => address[]) queuePatient;
         address[] queuePatientGetMedicine; // hospital
         address[] doctorAccessList; // hospital
         address[] accessJob; // doctor
@@ -115,18 +116,25 @@ contract Medishield {
         patientInfo[addr].healthcareRequestList.push(msg.sender)-1;
     }
     // new
-    function create_an_appointment(address addr) payable public {
+    // function create_an_appointment(address addr) payable public {
+    //     require(msg.value == 2 ether);
+    //     creditPool += 2;
+    //     healthcareInfo[addr].queuePatient.push(msg.sender)-1;
+    // }
+    function create_an_appointment(address addr, string memory date) payable public {
         require(msg.value == 2 ether);
         creditPool += 2;
-        healthcareInfo[addr].queuePatient.push(msg.sender)-1;
+        healthcareInfo[addr].queuePatient[date].push(msg.sender);
     }
-    function access_request_patient(address addr) payable public {
+    //da sua
+    function access_request_patient(address addr, string memory date) payable public {
         require(msg.value == 2 ether);
         creditPool += 2;
         healthcareInfo[msg.sender].queuDoctorSign.push(addr)-1;
         creditPool -= 2;
-        remove_element_in_array(healthcareInfo[msg.sender].queuePatient, addr);
+        remove_element_in_array(healthcareInfo[msg.sender].queuePatient[date], addr);
     }
+    
     function doctor_apply(address addr) payable public {
         require(msg.value == 2 ether);
         creditPool += 2;
@@ -256,8 +264,13 @@ contract Medishield {
         return healthcareInfo[addr].patientAccessList;
     }
     // new
-    function get_appointment_first(address addr) public view returns (address[] memory ){
-        address[] storage healthcareaddr = healthcareInfo[addr].queuePatient;
+    // function get_appointment_first(address addr) public view returns (address[] memory ){
+    //     address[] storage healthcareaddr = healthcareInfo[addr].queuePatient;
+    //     return healthcareaddr;
+    // }
+    function get_appointment_first(address addr, string memory date) public view returns (address[] memory) {
+        // Retrieve the queue for the specified date
+        address[] storage healthcareaddr = healthcareInfo[addr].queuePatient[date];
         return healthcareaddr;
     }
     function get_queue_doctor_sign_first(address addr) public view returns (address[] memory ){

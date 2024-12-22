@@ -696,7 +696,9 @@
                 } else console.log(error);
             });
             // showQueuePaitent
-            contractInstance.get_appointment_first(key, { gas: 1000000 }, function (error, result) {
+            
+            const datenow = getCurrentDate();
+            contractInstance.get_appointment_first(key,datenow, { gas: 1000000 }, function (error, result) {
                 if (!error) {
                     healthcareList = result;
                     console.log("!231231:", result);
@@ -1242,8 +1244,9 @@
 
         function accessRequestPatient() {
             var patientId = document.getElementById("addrPatient");
+            const datenow = getCurrentDate();
             // console.log(patientId.textContent);
-            contractInstance.access_request_patient.sendTransaction(patientId.textContent, {
+            contractInstance.access_request_patient.sendTransaction(patientId.textContent,datenow, {
                 from: key,
                 gas: 1000000,
                 value: web3.toWei(2, 'ether')
@@ -1489,6 +1492,7 @@
                             console.log("key : ", key);
                             console.log("Contract successfull");
                             alert("Contract was completed.");
+                            location.reload();
                         } else {
                             $(".alert-info").show();
                             console.log(error);
@@ -1573,6 +1577,7 @@ Day Quantity: <span id="day${i + 1}" >${document.getElementById("day" + (i + 1))
                                         }, function (error, result) {
                                             if (!error) {
                                                 alert("Diagnosis has been submitted.");
+                                                location.reload();
                                             } else {
                                                 console.log(error);
                                             }
@@ -1581,6 +1586,7 @@ Day Quantity: <span id="day${i + 1}" >${document.getElementById("day" + (i + 1))
                                 });
                             } else {
                                 alert("Enter name of disease");
+                                
                             }
                         }
                         else console.log(error);
@@ -1722,6 +1728,7 @@ Day Quantity: <span id="day${i + 1}" >${document.getElementById("day" + (i + 1))
                                         }, function (error) {
                                             if (!error) {
                                                 alert("Diagnosis has been submitted.");
+                                                location.reload();
                                             } else console.log(error);
                                         });
                                     }
@@ -1787,7 +1794,13 @@ Day Quantity: <span id="day${i + 1}" >${document.getElementById("day" + (i + 1))
             paginateTable('permithealthcareList', 5); // Phân trang bảng permithealthcareList (5 hàng/trang)
         }
 
-
+        function getCurrentDate() {
+                const today = new Date();
+                const year = today.getFullYear();
+                const month = String(today.getMonth() + 1).padStart(2, '0'); // Tháng bắt đầu từ 0
+                const day = String(today.getDate()).padStart(2, '0');
+                return `${year}-${month}-${day}`;
+            }
     </script>
 </body>
 
