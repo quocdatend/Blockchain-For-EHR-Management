@@ -16,6 +16,8 @@ contract Medishield {
         address[] wasDeletedRequestOrderMedicine;  // -1
         address[] successRequestOrderMedicine; // 3
         address[] waitPaymentRequestOrderMedicine; // 2
+        address[] cancelPaymentRequestOrderMedicine;
+        address[] queuePatientGetMedicineSuccess;
     }
     
     struct healthcare {
@@ -24,7 +26,8 @@ contract Medishield {
         uint designation;
         address[] patientAccessList; // view
         address[] queuDoctorSign; // sign
-        address[] queuePatient; // patients
+        // address[] queuePatient; // patients
+         mapping(string => address[]) queuePatient;
         address[] queuePatientGetMedicine; // hospital
         address[] doctorAccessList; // hospital
         address[] accessJob; // doctor
@@ -113,18 +116,25 @@ contract Medishield {
         patientInfo[addr].healthcareRequestList.push(msg.sender)-1;
     }
     // new
-    function create_an_appointment(address addr) payable public {
+    // function create_an_appointment(address addr) payable public {
+    //     require(msg.value == 2 ether);
+    //     creditPool += 2;
+    //     healthcareInfo[addr].queuePatient.push(msg.sender)-1;
+    // }
+    function create_an_appointment(address addr, string memory date) payable public {
         require(msg.value == 2 ether);
         creditPool += 2;
-        healthcareInfo[addr].queuePatient.push(msg.sender)-1;
+        healthcareInfo[addr].queuePatient[date].push(msg.sender);
     }
-    function access_request_patient(address addr) payable public {
+    //da sua
+    function access_request_patient(address addr, string memory date) payable public {
         require(msg.value == 2 ether);
         creditPool += 2;
         healthcareInfo[msg.sender].queuDoctorSign.push(addr)-1;
         creditPool -= 2;
-        remove_element_in_array(healthcareInfo[msg.sender].queuePatient, addr);
+        remove_element_in_array(healthcareInfo[msg.sender].queuePatient[date], addr);
     }
+    
     function doctor_apply(address addr) payable public {
         require(msg.value == 2 ether);
         creditPool += 2;
@@ -171,6 +181,14 @@ contract Medishield {
         //require(healthcareInfo[msg.sender].designation == 1, "Not a doctor account.");
         healthcareInfo[msg.sender].workingDays = _hash;
     }
+    function check_exits_buy_medicine(address addr, address paddr) public view returns(bool) {
+        for (uint i = 0; i < hospitalInfo[addr].patientOrderMedicineList.length; i++) {
+            if(hospitalInfo[addr].patientOrderMedicineList[i] == paddr) {
+                return true;
+            }
+        }
+        return false;
+    }
     //
     function permit_access_and_remove_doctor_permit_access(address addr) payable public {
         require(msg.value == 2 ether);
@@ -201,9 +219,7 @@ contract Medishield {
                 msg.sender.transfer(2 ether);
                 creditPool -= 2;
                 patientFound = true;
-                
             }
-            
         }
         if(patientFound==true){
             set_hash(paddr, _hash);
@@ -256,8 +272,13 @@ contract Medishield {
         return healthcareInfo[addr].patientAccessList;
     }
     // new
-    function get_appointment_first(address addr) public view returns (address[] memory ){
-        address[] storage healthcareaddr = healthcareInfo[addr].queuePatient;
+    // function get_appointment_first(address addr) public view returns (address[] memory ){
+    //     address[] storage healthcareaddr = healthcareInfo[addr].queuePatient;
+    //     return healthcareaddr;
+    // }
+    function get_appointment_first(address addr, string memory date) public view returns (address[] memory) {
+        // Retrieve the queue for the specified date
+        address[] storage healthcareaddr = healthcareInfo[addr].queuePatient[date];
         return healthcareaddr;
     }
     function get_queue_doctor_sign_first(address addr) public view returns (address[] memory ){
@@ -306,6 +327,7 @@ contract Medishield {
     function get_specialty_healthcare(address addr) public view returns(string memory) {
         return healthcareInfo[addr].specialty;
     }
+ 
     function get_working_days(address addr) public view  returns (string memory) {
          return healthcareInfo[addr].workingDays;
     }
@@ -336,12 +358,85 @@ contract Medishield {
     function get_hospital_list() public view returns (address[] memory) {
         return hospitalList;
     }
-    // function get_medincines(address addr) public view returns(string memory) {
-    //     return hospitalInfo[addr].medincines;
-    // }
-    // function set_medincine(address paddr, string memory _hash) public {
-    //     hospitalInfo[paddr].medincines = _hash;
-    // }
-    //
-}
+  
 
+    function getAddressesByField(string memory _field, bool isSpecialty) public view returns (address[] memory) {
+        address[] memory matchingAddresses = new address[](healthcareList.length);
+        uint count = 0;
+
+        for (uint i = 0; i < healthcareList.length; i++) {
+            string memory compareField = isSpecialty 
+                ? healthcareInfo[healthcareList[i]].specialty 
+                : healthcareInfo[healthcareList[i]].workingDays;
+
+            // Kiểm tra giá trị
+            if (
+                (isSpecialty && keccak256(abi.encodePacked(compareField)) == keccak256(abi.encodePacked(_field))) || 
+                (!isSpecialty && contains(compareField, _field))
+            ) {
+                matchingAddresses[count] = healthcareList[i];
+                count++;
+            }
+        }
+
+        
+        address[] memory result = new address[](count);
+        for (uint j = 0; j < count; j++) {
+            result[j] = matchingAddresses[j];
+        }
+
+        return result;
+    }
+    function contains(string memory _base, string memory _value) internal pure returns (bool) {
+        bytes memory baseBytes = bytes(_base);
+        bytes memory valueBytes = bytes(_value);
+
+        // Trả về false nếu chuỗi _value rỗng hoặc dài hơn chuỗi _base
+        if (valueBytes.length == 0 || valueBytes.length > baseBytes.length) {
+            return false;
+        }
+
+        for (uint i = 0; i <= baseBytes.length - valueBytes.length; i++) {
+            bool matchFound = true;
+            for (uint j = 0; j < valueBytes.length; j++) {
+                if (baseBytes[i + j] != valueBytes[j]) {
+                    matchFound = false;
+                    break;
+                }
+            }
+            if (matchFound) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    function send_request_payment(address addr, string memory _hash) payable public {
+        require(msg.value == 2 ether);
+        creditPool += 2;
+        hospitalInfo[msg.sender].medicines = _hash;
+        patientInfo[addr].waitPaymentRequestOrderMedicine.push(msg.sender)-1;
+        creditPool -= 1;
+        remove_element_in_array(patientInfo[addr].waitHandleRequestOrderMedicine, msg.sender);
+    }
+    function payment_medicine_success(address addr) payable public {
+        require(msg.value == 2 ether);
+        creditPool +=2;
+        patientInfo[msg.sender].successRequestOrderMedicine.push(addr)-1;
+        creditPool -= 1;
+        remove_element_in_array(patientInfo[msg.sender].waitPaymentRequestOrderMedicine, addr);
+    }
+    function cancel_payment_medicine(address addr) payable public {
+        require(msg.value == 2 ether);
+        creditPool += 2;
+        patientInfo[msg.sender].cancelPaymentRequestOrderMedicine.push(addr)-1;
+        creditPool -=1;
+        remove_element_in_array(patientInfo[msg.sender].waitPaymentRequestOrderMedicine, addr);
+    }
+    function get_cancel_payment_request_order_medicine(address addr) public view returns(address[] memory) {
+            address[] storage hospitalAddr =  patientInfo[addr].cancelPaymentRequestOrderMedicine;
+            return hospitalAddr;
+        }
+
+}
