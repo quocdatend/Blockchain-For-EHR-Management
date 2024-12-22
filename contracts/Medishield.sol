@@ -181,6 +181,14 @@ contract Medishield {
         //require(healthcareInfo[msg.sender].designation == 1, "Not a doctor account.");
         healthcareInfo[msg.sender].workingDays = _hash;
     }
+    function check_exits_buy_medicine(address addr, address paddr) public view returns(bool) {
+        for (uint i = 0; i < hospitalInfo[addr].patientOrderMedicineList.length; i++) {
+            if(hospitalInfo[addr].patientOrderMedicineList[i] == paddr) {
+                return true;
+            }
+        }
+        return false;
+    }
     //
     function permit_access_and_remove_doctor_permit_access(address addr) payable public {
         require(msg.value == 2 ether);

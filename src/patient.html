@@ -1052,15 +1052,25 @@
         }, function (error, result) {
             if (!error) {
                 hospitalList = result;
-                contractInstance.request_ordor_medicine.sendTransaction(hospitalList[index - 1], { from: key, gas: 1000000, value: web3.toWei(2, 'ether') }, function (error) {
+                contractInstance.check_exits_buy_medicine.call(hospitalList[index - 1], key, {gas: 1000000}, function (error,result) {
                     if (!error) {
-                        console.log("Request Order Medicine Success");
-                        alert("Send request to Hospital was completed.");
-                        location.reload();
+                        if(result) {
+                            alert("Bạn đang mua thuốc!");
+                        } else {
+                            contractInstance.request_ordor_medicine.sendTransaction(hospitalList[index - 1], { from: key, gas: 1000000, value: web3.toWei(2, 'ether') }, function (error) {
+                            if (!error) {
+                                console.log("Request Order Medicine Success");
+                                alert("Send request to Hospital was completed.");
+                                location.reload();
+                            }
+                            else { 
+                                console.log(error); 
+                            }
+                        }); 
+                        }
                     }
-                    
                     else {
-                        $(".alert-info").show();   
+                        $(".alert-info").show();
                         console.log(error); 
                     }
                 });
