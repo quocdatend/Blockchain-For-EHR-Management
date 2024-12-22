@@ -1,49 +1,36 @@
-
-
-
-
-
-## Demo Video:
-
-https://www.youtube.com/watch?v=UJet5UYUOfY
-
-
-# Blockchain-For-EHR-Management-Medishield
-A decentralized system for managing electronic health records using blockchain and IPFS.
-
-# Requirements
- Instructions to install all required dependencies are given below.
-
-# Ganache
-1. Ganache is a personalized blockchain for Ethereum development. It can be used to run tests, execute commands, and inspect states while controlling how the chain          operates.
-2. Go to [Ganache homepage](https://www.trufflesuite.com/ganache) and download.
-
-# IPFS
-1. Go to [go-ipfs](https://dist.ipfs.io/#go-ipfs) and install go ipfs.  Using IPFS through the command-line allows you to do everything that IPFS Desktop can do, but at    a more granular level since you can specify which commands to run.
-
-# Metamask
-1. Metamask is a browser extension available for Google Chrome, Mozilla Firefox and Brave Browser.
-2. Go to the this [link](https://metamask.io/) and add Metamask to your browser.
-
-# Node js
-1. Node.js is designed to build scalable network applications.
-2. Go to the this [link](https://nodejs.org/en/download/) and install node js.
-
-
-# Getting the DApp running
-
-# Configuration
-
-1. Ganache
-
-  * Open Ganache and click on settings in the top right corner.
-  * Under Server tab:
-     * Set Hostname to 127.0.0.1 -lo
-     * Set Port Number to 8545
-     * Enable Automine
-  *  Under Accounts & Keys tab:
-     * Enable Autogenerate HD Mnemonic
-
-2. Metamask
-
-   
+Mô tả chi tiết thiết lập môi trường:
+1.Tải và cài đặt nodejs 
+	- Truy cập trang web chính thức của Node.js tại: https://nodejs.org/en/download/package-manager/current.
+2.Tải và cài đặt ipfs 
+	- Truy cập trang web chính thức https://docs.ipfs.tech/install/command-line/#install-official-binary-distributions.
+3.Tải vè cài đặt ganache 
+	-Tạo mới : new workspace
+	-TRUFFLE PROJECTS -> chọn add Project ->Blockchain-For-EHR-Management/truffle-config.js
+	-Server : HOSTNAME :127.0.0.1 ,PORT NUMBER : 7545,NETWORK ID : 5777
+	Bấm nút start
+4.Cài đặt Metamask
+	-Truy cập website :https://metamask.io/
+	-Cài đặt MetaMask như một extension trên trình duyệt.
+	-Thiết lập môi trường thử nghiệm trên MetaMask:
+	-Chuyển sang mạng thử nghiệm (Testnet)
+	-Mở MetaMask và nhấn vào "Add Network"
+	-Điền thông tin từ Ganache:
+		Network Name: Ganache
+		New RPC URL: http://127.0.0.1:8545
+		Chain ID: 1337 
+		Currency Symbol: ETH
+	-Lưu và dùng mạng thử nghiệm
+5.Cài đặt tài khoản thử nghiệm
+	-Chọn môi trường test
+	- Chọn thêm tài khoản hoặc ví cứng -> nhập tài khoản -> vào lại ganache -> chọn acount-> 
+		chọn 1 account và bấm vào hình khóa -> copy PRIVATE KEY-> dán vào ô -> nhập
+		(nếu thành công sẽ hiển thị tài khoản với chung số tiền trong ganache)
+6.Chạy web 
+	B1: chạy ứng dụng ganache.
+	B2: chạy ipfs : mở powershell(với vai trò admin) , chạy câu lệnh ipfs daemon.
+	B3: mở file code trên vscode : chạy các câu lệnh 
+		+ npm install -force    
+		+ npm install -g truffle
+		+ truffle mirage --reset
+		+ ipfs daemon 
+	B4: chạy web trên brower : http://localhost:3000/.
