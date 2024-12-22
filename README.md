@@ -1,4 +1,4 @@
-Mô tả chi tiết thiết lập môi trường:
+# Mô tả chi tiết thiết lập môi trường:
 1.Tải và cài đặt nodejs 
 	- Truy cập trang web chính thức của Node.js tại: https://nodejs.org/en/download/package-manager/current.
 2.Tải và cài đặt ipfs 
